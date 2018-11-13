@@ -4,21 +4,23 @@ TIMING_SAMPLES ?= 10
 ROOT_DIR ?=/app/experiments
 TEST_DIR=test
 BENCHMARK_DIR ?=fresh
+IDEAL_CONFIGS ?=17
+CONFIGS ?=17 7 17 13 17 8
 
 .PHONY: external fine coarse all clean test-clean outputs
 
 all: coarse fine external
 
 external:
-	./extremes.sh $(TIMING_SAMPLES) $(ROOT_DIR) $(BENCHMARK_DIR) 17 19
+	./extremes.sh $(TIMING_SAMPLES) $(ROOT_DIR) $(BENCHMARK_DIR) $(IDEAL_CONFIGS)
 
 fine:
 	./lattice_bins.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true fine \
-		$(BIN_SAMPLES) $(NUM_BINS) 17 7 19 17 17 13 19 15 17 8 19 11
+		$(BIN_SAMPLES) $(NUM_BINS) $(CONFIGS)
 
 coarse:
 	./lattice_bins.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
-		$(BIN_SAMPLES) $(NUM_BINS) 17 7 19 17 17 13 19 15 17 8 19 11
+		$(BIN_SAMPLES) $(NUM_BINS) $(CONFIGS)
 
 test:
 	TIMING_SAMPLES=1 BIN_SAMPLES=1 NUM_BINS=20 BENCHMARK_DIR=$(TEST_DIR) ROOT_DIR=".." \
