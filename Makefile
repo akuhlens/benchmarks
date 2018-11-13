@@ -7,7 +7,7 @@ DOCKER_BUILD_FLAGS=--build-arg CACHE_DATE=$(DATE) --build-arg EXPR_DIR=$(CONTAIN
 
 all: build run
 
-.PHONY: all build run docker-clean
+.PHONY: all build run docker-clean attach setup_dir
 
 build:
 	time docker build $(DOCKER_BUILD_FLAGS) -t $(IMAGE_NAME) . 2>&1 | tee $<.log
@@ -20,16 +20,20 @@ run:
 		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME)
 
-debug:
-	time docker build $(DOCKER_BUILD_FLAGS) -t $(IMAGE_NAME) . 2>&1 | tee $<.log
+setup_dir:
 	rm -rf $(HOST_EXPERIMENT_DIR)/*
 	cp -r ./* $(HOST_EXPERIMENT_DIR)
+
+attach:
 	docker run --rm -it --userns=host \
 		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME) /bin/bash
+
+debug: build setup_dir attach
 
 docker-clean:
 	@echo "Remove all non running containers"
 	-docker rm `docker ps -q -f status=exited`
 	@echo "Delete all untagged/dangling (<none>) images"
 	-docker rmi `docker images -q -f dangling=true`
+

@@ -7,7 +7,7 @@ BENCHMARK_DIR ?=fresh
 
 .PHONY: external fine coarse all clean test-clean outputs
 
-all: external coarse fine
+all: coarse fine external
 
 external:
 	./extremes.sh $(TIMING_SAMPLES) $(ROOT_DIR) $(BENCHMARK_DIR) 17 19
@@ -21,7 +21,7 @@ coarse:
 		$(BIN_SAMPLES) $(NUM_BINS) 17 7 19 17 17 13 19 15 17 8 19 11
 
 test:
-	TIMING_SAMPLES=1 BIN_SAMPLES=1 NUM_BINS=10 BENCHMARK_DIR=$(TEST_DIR) ROOT_DIR=".." \
+	TIMING_SAMPLES=1 BIN_SAMPLES=1 NUM_BINS=20 BENCHMARK_DIR=$(TEST_DIR) ROOT_DIR=".." \
 		$(MAKE) all
 
 clean:

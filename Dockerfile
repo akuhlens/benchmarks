@@ -41,18 +41,24 @@ RUN raco pkg install --auto csv-reading
 RUN pacman --quiet --noconfirm -S stack
 RUN pacman --quiet --noconfirm -S clang
 
-# invalidate Docker cache to always pull the recent version of the dynamizer and grift
-ARG CACHE_DATE=not_a_date
+# installing Grift
+# RUN raco pkg install grift
+# RUN cp /root/.racket/7.0/bin/* /usr/local/bin
+RUN git clone https://github.com/Gradual-Typing/Grift.git 
+WORKDIR /app/Grift
+RUN git checkout rectypes
+RUN cp main.rkt grift
+RUN raco make -j 8 -v grift
+ENV PATH="/app/Grift/:$PATH"
+
+WORKDIR /app
+
 
 # installing the Dynamizer
 RUN git clone https://github.com/Gradual-Typing/Dynamizer.git \
     && mkdir -p /home/root && cd Dynamizer && stack setup \
     && stack build && stack install \
     && cp /root/.local/bin/dynamizer /usr/local/bin
-
-# installing Grift
-RUN raco pkg install grift
-RUN cp /root/.racket/7.0/bin/* /usr/local/bin
 
 ARG EXPR_DIR=not_a_path
 
