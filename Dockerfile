@@ -44,24 +44,25 @@ RUN pacman --quiet --noconfirm -S clang
 # installing Grift
 # RUN raco pkg install grift
 # RUN cp /root/.racket/7.0/bin/* /usr/local/bin
-RUN git clone https://github.com/Gradual-Typing/Grift.git 
+RUN raco pkg install --no-setup \
+    --clone Grift https://github.com/Gradual-Typing/Grift.git 
+RUN raco link -l
 WORKDIR /app/Grift
 RUN git checkout rectypes
-RUN cp main.rkt grift
-RUN raco make -j 8 -v grift
-ENV PATH="/app/Grift/:$PATH"
-
+RUN raco setup grift
 WORKDIR /app
-
+ENV PATH="/root/.racket/7.0/bin/:$PATH"
 
 # installing the Dynamizer
-RUN git clone https://github.com/Gradual-Typing/Dynamizer.git \
-    && mkdir -p /home/root && cd Dynamizer && stack setup \
-    && stack build && stack install \
-    && cp /root/.local/bin/dynamizer /usr/local/bin
+# RUN git clone https://github.com/Gradual-Typing/Dynamizer.git \
+#     && mkdir -p /home/root && cd Dynamizer && stack setup \
+#     && stack build && stack install \
+#     && cp /root/.local/bin/dynamizer /usr/local/bin
 
-ARG EXPR_DIR=not_a_path
+#ARG EXPR_DIR=not_a_path
 
-WORKDIR $EXPR_DIR/scripts
+#WORKDIR $EXPR_DIR/scripts
 
-CMD make all
+
+
+#CMD make all
