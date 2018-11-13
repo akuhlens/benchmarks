@@ -54,15 +54,14 @@ WORKDIR /app
 ENV PATH="/root/.racket/7.0/bin/:$PATH"
 
 # installing the Dynamizer
-# RUN git clone https://github.com/Gradual-Typing/Dynamizer.git \
-#     && mkdir -p /home/root && cd Dynamizer && stack setup \
-#     && stack build && stack install \
-#     && cp /root/.local/bin/dynamizer /usr/local/bin
+RUN git clone https://github.com/Gradual-Typing/Dynamizer.git \
+    && mkdir -p /home/root && cd Dynamizer && stack setup \
+    && stack build && stack install \
+    && cp /root/.local/bin/dynamizer /usr/local/bin
 
-#ARG EXPR_DIR=not_a_path
+ARG EXPR_DIR=not_a_path
 
-#WORKDIR $EXPR_DIR/scripts
+WORKDIR $EXPR_DIR/scripts
 
-
-
-#CMD make all
+ARG CACHE_DATE=not_a_date
+CMD make all

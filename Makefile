@@ -21,7 +21,7 @@ run:
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME)
 
 setup_dir:
-	rm -rf $(HOST_EXPERIMENT_DIR)/*
+	-rm -rf $(HOST_EXPERIMENT_DIR)/*
 	cp -r ./* $(HOST_EXPERIMENT_DIR)
 
 attach:
