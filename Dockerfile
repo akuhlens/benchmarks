@@ -42,11 +42,8 @@ RUN pacman --quiet --noconfirm -S stack
 RUN pacman --quiet --noconfirm -S clang
 
 # installing Grift
-# RUN raco pkg install grift
-# RUN cp /root/.racket/7.0/bin/* /usr/local/bin
 RUN raco pkg install --no-setup \
     --clone Grift https://github.com/Gradual-Typing/Grift.git 
-RUN raco link -l
 WORKDIR /app/Grift
 RUN git checkout rectypes
 RUN raco setup grift

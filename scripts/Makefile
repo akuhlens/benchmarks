@@ -1,6 +1,6 @@
 BIN_SAMPLES ?= 30
 NUM_BINS ?= 30
-TIMING_SAMPLES ?= 10
+TIMING_SAMPLES ?= 5
 ROOT_DIR ?=/app/experiments
 TEST_DIR=test
 BENCHMARK_DIR ?=fresh
