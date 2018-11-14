@@ -75,7 +75,7 @@ function plot_one_config_benchmark()
     config_runtime_mean="$RETURN"
 
     dyn_mean=$(cat "${TMP_DIR}/dyn/${name}${disk_aux_name}${dyn_config}.runtime")
-    static_mean=$(cat "${TMP_DIR}/static/${name}${disk_aux_name}.static.runtime")
+    static_mean=$(cat "${TMP_DIR}/static/${name}/single/${name}${disk_aux_name}.static.runtime")
 
     if [ ! -f "$config_cumulative_log" ]; then
 	# create data files for the cummulative performance figures
@@ -338,7 +338,7 @@ function plot_two_configs_benchmark()
     config2_runtime_mean="$RETURN"
 
     dyn_mean=$(cat "${TMP_DIR}/dyn/${name}${disk_aux_name}${dyn_config}.runtime")
-    static_mean=$(cat "${TMP_DIR}/static/${name}${disk_aux_name}.static.runtime")
+    static_mean=$(cat "${TMP_DIR}/static/${name}/single/${name}${disk_aux_name}.static.runtime")
 
     # create data files for the cummulative performance figures
     if [ ! -f "$config1_cumulative_log" ]; then

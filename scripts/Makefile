@@ -6,10 +6,14 @@ TEST_DIR=test
 BENCHMARK_DIR ?=fresh
 IDEAL_CONFIGS ?=17
 CONFIGS ?=17 7
+DYNAMIC_GRIFT_CONFIG ?=17
 
-.PHONY: external fine coarse all clean test-clean outputs
+.PHONY: external fine coarse all plot clean test-clean outputs
 
-all: coarse fine external
+all: coarse plot fine plot external
+
+plot:
+	./plot_lattice.sh $(ROOT_DIR) $(DYNAMIC_GRIFT_CONFIG) $(CONFIGS)
 
 external:
 	./extremes.sh $(TIMING_SAMPLES) $(ROOT_DIR) $(BENCHMARK_DIR) $(IDEAL_CONFIGS)
