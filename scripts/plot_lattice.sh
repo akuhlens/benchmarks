@@ -17,6 +17,11 @@ function main()
     declare -r OUT_DIR="${EXP_DIR}/output"
     declare -r TMP_DIR="${EXP_DIR}/tmp"
 
+    DPURPLE='#7b3294'
+    DGREEN='#008837'
+    SYELLOW='#fdb863'
+    SPURPLE='#5e3c99'
+
     . ${LIB_DIR}/runtime.sh
     . ${LIB_DIR}/benchmarks.sh
     . ${LIB_DIR}/plotting.sh

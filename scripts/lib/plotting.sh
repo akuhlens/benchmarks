@@ -7,10 +7,6 @@ function plot_one_config()
     local config="$1";     shift
     local dyn_config="$1"; shift
 
-    DPURPLE='#7b3294'
-    DGREEN='#008837'
-    SYELLOW='#fdb863'
-    SPURPLE='#5e3c99'
     color="$DGREEN"
 
     local config_str=$(grift-configs -n $config)
@@ -246,10 +242,6 @@ function plot_two_configs()
     local c2="$1";         shift
     local dyn_config="$1"; shift
 
-    DPURPLE='#7b3294'
-    DGREEN='#008837'
-    SYELLOW='#fdb863'
-    SPURPLE='#5e3c99'
     color1="$DGREEN"
     color2="$DPURPLE"
 
@@ -320,8 +312,11 @@ function plot_two_configs_benchmark()
     tail -n +2 "$config2_log" | sort -k2 -n -t, > "${config2_log_sorted}"
 
     # deletes the first line which contains the fully untyped configuration
-    sed -i "1d" "${config1_log_sorted}"
-    sed -i "1d" "${config2_log_sorted}"
+    config_name=$(sed -n 1p "${config1_log_sorted}" |cut -d "," -f1)
+    if [ "$config_name" = "dyn" ]; then
+	sed -i "1d" "${config1_log_sorted}"
+	sed -i "1d" "${config2_log_sorted}"
+    fi
 
     print_aux_name=""
     printname="$(echo "$name" | tr _ "-")${print_aux_name}"
