@@ -5,7 +5,7 @@ ROOT_DIR ?=/app/experiments
 TEST_DIR=test
 BENCHMARK_DIR ?=fresh
 IDEAL_CONFIGS ?=17
-CONFIGS ?=17 7 17 13 17 8
+CONFIGS ?=17 7
 
 .PHONY: external fine coarse all clean test-clean outputs
 

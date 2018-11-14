@@ -41,6 +41,9 @@ RUN raco pkg install --auto csv-reading
 RUN pacman --quiet --noconfirm -S stack
 RUN pacman --quiet --noconfirm -S clang
 
+# Invalidate Cache so that a fresh Grift is Installed.
+ARG CACHE_DATE=not_a_date
+
 # installing Grift
 RUN raco pkg install --no-setup \
     --clone Grift https://github.com/Gradual-Typing/Grift.git 
@@ -60,5 +63,4 @@ ARG EXPR_DIR=not_a_path
 
 WORKDIR $EXPR_DIR/scripts
 
-ARG CACHE_DATE=not_a_date
 CMD make all
