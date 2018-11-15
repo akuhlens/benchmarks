@@ -1,0 +1,3 @@
+[submodule "typed_racket_benchmarks"]
+	path = typed_racket_benchmarks
+	url = git@github.com:bennn/gtp-benchmarks.git

@@ -32,7 +32,7 @@ RUN wget http://downloads.sourceforge.net/sourceforge/gnuplot/gnuplot-5.2.0.tar.
     && ./configure --disable-wxwidgets --with-qt=no --with-x --with-readline=gnu \
     && make -j 8 && make install
 RUN pacman --quiet --noconfirm -S bc
-RUN raco pkg install --auto csv-reading
+RUN raco pkg install --auto csv-reading require-typed-check
 
 # These are needed for building the dynamizer and grift programs, they should
 # not be installed after invalidating the cache because arch linux could have

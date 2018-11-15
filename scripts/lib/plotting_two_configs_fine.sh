@@ -235,6 +235,7 @@ function plot_two_configs_fine_benchmark()
             `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}';"`
 	    `"unset xlabel;"`
 	    `"set format x '';"`
+	    `"set ytics auto;"`
             `"set key opaque top right box vertical width 1 height 1 maxcols 1 spacing 1 font 'Verdana,20';"`
 	    `"set tmargin at screen TOP;"`
 	    `"set bmargin at screen TOP+0.02-DY;"`
@@ -334,6 +335,7 @@ function plot_two_configs_fine_benchmark()
             `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}';"`
 	    `"unset xlabel;"`
 	    `"set format x '';"`
+	    `"set ytics auto;"`
             `"set key opaque top right box vertical width 1 height 1 maxcols 1 spacing 1 font 'Verdana,20';"`
 	    `"set tmargin at screen TOP;"`
 	    `"set bmargin at screen TOP+0.02-DY;"`
@@ -405,8 +407,8 @@ function plot_two_configs_fine_benchmark()
     fi
 
     # cumulative performance figures
-    gnuplot -e "set datafile separator \",\"; set terminal pngcairo "`
-                `"enhanced color font 'Verdana,10' size 1000,200;"`
+        gnuplot -e "set datafile separator \",\"; set terminal pngcairo "`
+                `"enhanced color font 'Verdana,10' size 1000,400;"`
                 `"set output '${cumulative_performance_fig}';"`
                 `"set border 15 back;"`
                 `"set key opaque bottom right;"`
@@ -430,6 +432,6 @@ function plot_two_configs_fine_benchmark()
                 `"set arrow from 8,graph(0,0) to 8,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
                 `"set arrow from 9,graph(0,0) to 9,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
                 `"set arrow from 10,graph(0,0) to 10,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
-                `"plot '${config1_log_sorted}' using 4:(1.) title '${c1t}' smooth cumulative,"`
-                `"     '${config2_log_sorted}' using 4:(1.) title '${c2t}' smooth cumulative"
+                `"plot '${config1_log_sorted}' using 4:(1.) lc rgb '$color1' title '${c1t}' smooth cumulative,"`
+                `"     '${config2_log_sorted}' using 4:(1.) lc rgb '$color2' title '${c2t}' smooth cumulative"
 }
