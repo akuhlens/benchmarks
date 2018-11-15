@@ -198,10 +198,10 @@ function plot_two_configs_fine_benchmark()
             `"${static_mean} lw 2 dt 2 lc \"blue\" title 'Static Grift',"`
             `"${dyn_mean} lw 2 lt 1 lc \"red\" title 'Dynamic Grift';"
 
-    local max_longest_proxy_chain=$(awk 'BEGIN { max=0 } $8 > max { max=$8} END { print max }' FS="," "${config1_log_sorted}")
+    local max_longest_proxy_chain=$(awk 'BEGIN { max=0 } $8 > max { max=$8} END { print max }' FS="," "${config2_log_sorted}")
+    echo "longest proxy chain for ${config2_log_sorted} is: $max_longest_proxy_chain"
 
     if [ "$max_longest_proxy_chain" -lt 11 ]; then
-	
 	# showing runtime, casts count, and longest proxy chain all in one figure
 	gnuplot -e "set datafile separator \",\";"`
             `"set terminal pngcairo size 1280,1900"`
