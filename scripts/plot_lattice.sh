@@ -24,15 +24,16 @@ function main()
 
     . ${LIB_DIR}/runtime.sh
     . ${LIB_DIR}/benchmarks.sh
-    . ${LIB_DIR}/plotting.sh
+    . ${LIB_DIR}/plotting_one_config_fine.sh
+    . ${LIB_DIR}/plotting_two_configs_fine.sh
 
     local i j
     while (( "$#" )); do
         i=$1; shift
         j=$1; shift
-        plot_two_configs $i $j $dyn_config
-	plot_one_config $i $dyn_config
-	plot_one_config $j $dyn_config
+        plot_two_configs_fine $i $j $dyn_config
+	plot_one_config_fine $i $dyn_config
+	plot_one_config_fine $j $dyn_config
     done
 }
 
