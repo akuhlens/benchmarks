@@ -132,6 +132,8 @@ function plot_two_configs_fine_benchmark()
             `"set title \"${printname}\";"`
             `"set xlabel \"How much of the code is typed\";"`
             `"set ylabel \"Longest proxy chain\";"`
+	    `"set yrange [0:*];"`
+	    `"set ytics 0,1;"`
             `"plot '${config1_log_sorted}' using 2:8 with points"` 
             `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
             `"'${config2_log_sorted}' using 2:8 with points"`

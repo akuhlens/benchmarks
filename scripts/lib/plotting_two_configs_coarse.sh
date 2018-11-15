@@ -146,19 +146,14 @@ function plot_two_configs_coarse_benchmark()
             `"set output '${runtime_fig}';"`
             `"set key opaque top right box vertical width 1 height 1 maxcols 1 spacing 1 font 'Verdana,20';"`
             `"set title \"${printname}\";"`
-   	    `"stats '${config1_log_sorted}' nooutput;"`
-	    `"set xrange [0:STATS_records+10];"`
-	    `"divby=STATS_records/4;"`
-	    `"set xtics ('0%%' 0, '25%%' divby, '50%%' divby*2, '75%%' divby*3, '100%%' divby*4) nomirror;"`
+	    `"set xrange [0:100];"`
             `"set xlabel \"How much of the code is typed\";"`
             `"set ylabel \"Runtime in seconds\";"`
-	    `"set palette maxcolors 2;"`
-	    `"set palette model RGB defined ( 0 '$color2', 1 '$color2' );"` # 0 should be red
-	    `"unset colorbox;"`
-            `"plot '${config1_log_sorted}' using 0:( strcol(1) eq \"dyn\" ? NaN : \$3 ) with points"` 
+	    `"set yrange [0:*];"`
+            `"plot '${config1_log_sorted}' using 2:3 with points"` 
             `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
-            `"'${config2_log_sorted}' using 0:( strcol(1) eq \"dyn\" ? NaN : \$3 ):( \$8 > 50 ? 0 : 1 ) with points"`
-            `"   pt 6 ps 3 palette title '${c2t}',"`
+            `"'${config2_log_sorted}' using 2:3 with points"`
+            `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}',"`
             `"${static_mean} lw 2 dt 2 lc \"blue\" title 'Static Grift',"`
             `"${dyn_mean} lw 2 dt 2 lc \"red\" title 'Dynamic Grift';"
 
@@ -189,10 +184,7 @@ function plot_two_configs_coarse_benchmark()
             `"set xlabel \"How much of the code is typed\";"`
 	    `"unset ylabel;"`
 	    `"unset key;"`
-	    `"stats '${config1_log_sorted}' nooutput;"`
-	    `"set xrange [0:STATS_records+10];"`
-	    `"divby=STATS_records/4;"`
-	    `"set xtics ('0%%' 0, '25%%' divby, '50%%' divby*2, '75%%' divby*3, '100%%' divby*4) nomirror;"`
+	    `"set xrange [0:100];"`
 	    `"max(x,y) = (x > y) ? x : y;"`
 	    `"set format x '';"`
 	    `"set yrange [0:*];"`
@@ -200,9 +192,9 @@ function plot_two_configs_coarse_benchmark()
 	    `"set tmargin at screen TOP-DY;"`
 	    `"set bmargin at screen TOP+0.02-2*DY;"`
 	    `"unset key;"`
-            `"plot '${config1_log_sorted}' using 0:7 with points"` 
+            `"plot '${config1_log_sorted}' using 2:7 with points"` 
             `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
-            `"'${config2_log_sorted}' using 0:7 with points"`
+            `"'${config2_log_sorted}' using 2:7 with points"`
             `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}';"`
 	    `"unset xtics; unset xlabel;"`
             `"set key opaque top right box vertical width 1 height 1 maxcols 1 spacing 1 font 'Verdana,20';"`
@@ -210,13 +202,10 @@ function plot_two_configs_coarse_benchmark()
 	    `"set bmargin at screen TOP+0.02-DY;"`
             `"set title \"${printname}\";"`
             `"set label 3 \"Runtime in seconds\" at screen 0.02,0.7 rotate by 90;"`
-	    `"set palette maxcolors 2;"`
-	    `"set palette model RGB defined ( 0 '$color2', 1 '$color2' );"`
-	    `"unset colorbox;"`
-            `"plot '${config1_log_sorted}' using 0:( strcol(1) eq \"dyn\" ? NaN : \$3 ) with points"` 
+            `"plot '${config1_log_sorted}' using 2:3 with points"` 
             `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
-            `"'${config2_log_sorted}' using 0:( strcol(1) eq \"dyn\" ? NaN : \$3 ):( \$8 > 50 ? 0 : 1 ) with points"`
-            `"   pt 6 ps 3 palette title '${c2t}',"`
+            `"'${config2_log_sorted}' using 2:3 with points"`
+            `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}',"`
             `"${static_mean} lw 2 dt 2 lc \"blue\" title 'Static Grift',"`
             `"${dyn_mean} lw 2 lt 1 lc \"red\" title 'Dynamic Grift';"
 
@@ -236,42 +225,37 @@ function plot_two_configs_coarse_benchmark()
 	    `"set tmargin at screen TOP-2*DY;"`
 	    `"set bmargin at screen TOP-3*DY;"`
 	    `"unset key;"`
-	    `"stats '${config1_log_sorted}' using 19 nooutput;"`
-	    `"set ytics 1;"`
-	    `"set xrange [0:STATS_records+10];"`
-	    `"divby=STATS_records/4;"`
-	    `"set xtics ('0%%' 0, '25%%' divby, '50%%' divby*2, '75%%' divby*3, '100%%' divby*4) nomirror;"`
-	    `"max(x,y) = (x > y) ? x : y;"`
 	    `"set yrange [0:*];"`
-            `"plot '${config1_log_sorted}' using 0:(max(\$19, (max(\$20, \$21)))) with points"` 
+	    `"set ytics 0,1;"`
+	    `"set xrange [0:100];"`
+	    `"max(x,y) = (x > y) ? x : y;"`
+            `"plot '${config1_log_sorted}' using 2:(max(\$19, (max(\$20, \$21)))) with points"` 
             `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
-	    `"'${config2_log_sorted}' using 0:(max(\$19, (max(\$20, \$21)))) with points"`
+	    `"'${config2_log_sorted}' using 2:(max(\$19, (max(\$20, \$21)))) with points"`
             `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}';"`
 	    `"unset xtics;"`
+	    `"set ytics auto;"`
 	    `"unset xlabel;"`
 	    `"set format x '';"`
 	    `"set yrange [0:*];"`
-	    `"set ytics auto;"`
             `"set label 2 \"Runtime casts count\" at screen 0.02,0.45 rotate by 90;"`
 	    `"set tmargin at screen TOP-DY;"`
 	    `"set bmargin at screen TOP+0.02-2*DY;"`
 	    `"unset key;"`
-            `"plot '${config1_log_sorted}' using 0:7 with points"` 
+            `"plot '${config1_log_sorted}' using 2:7 with points"` 
             `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
-            `"'${config2_log_sorted}' using 0:7 with points"`
+            `"'${config2_log_sorted}' using 2:7 with points"`
             `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}';"`
             `"set key opaque top right box vertical width 1 height 1 maxcols 1 spacing 1 font 'Verdana,20';"`
 	    `"set tmargin at screen TOP;"`
 	    `"set bmargin at screen TOP+0.02-DY;"`
             `"set title \"${printname}\";"`
             `"set label 3 \"Runtime in seconds\" at screen 0.02,0.75 rotate by 90;"`
-	    `"set palette maxcolors 2;"`
-	    `"set palette model RGB defined ( 0 '$color2', 1 '$color2' );"`
-	    `"unset colorbox;"`
-            `"plot '${config1_log_sorted}' using 0:( strcol(1) eq \"dyn\" ? NaN : \$3 ) with points"` 
+	    `"set ytics auto;"`
+            `"plot '${config1_log_sorted}' using 2:3 with points"` 
             `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
-            `"'${config2_log_sorted}' using 0:( strcol(1) eq \"dyn\" ? NaN : \$3 ):( \$8 > 50 ? 0 : 1 ) with points"`
-            `"   pt 6 ps 3 palette title '${c2t}',"`
+            `"'${config2_log_sorted}' using 2:3 with points"`
+            `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}',"`
             `"${static_mean} lw 2 dt 2 lc \"blue\" title 'Static Grift',"`
             `"${dyn_mean} lw 2 lt 1 lc \"red\" title 'Dynamic Grift';"
 
