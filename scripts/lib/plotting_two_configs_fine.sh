@@ -172,7 +172,6 @@ function plot_two_configs_fine_benchmark()
 	    `"divby=STATS_records/4;"`
 	    `"set xtics ('0%%' 0, '25%%' divby, '50%%' divby*2, '75%%' divby*3, '100%%' divby*4) nomirror;"`
 	    `"max(x,y) = (x > y) ? x : y;"`
-	    `"set format x '';"`
 	    `"set yrange [0:*];"`
             `"set label 2 \"Runtime casts count\" at screen 0.02,0.25 rotate by 90;"`
 	    `"set tmargin at screen TOP-DY;"`
@@ -182,7 +181,8 @@ function plot_two_configs_fine_benchmark()
             `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
             `"'${config2_log_sorted}' using 0:7 with points"`
             `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}';"`
-	    `"unset xtics; unset xlabel;"`
+	    `"unset xlabel;"`
+	    `"set format x '';"`
             `"set key opaque top right box vertical width 1 height 1 maxcols 1 spacing 1 font 'Verdana,20';"`
 	    `"set tmargin at screen TOP;"`
 	    `"set bmargin at screen TOP+0.02-DY;"`

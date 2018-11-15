@@ -37,22 +37,25 @@ function plot_two_configs_coarse_benchmark()
     local plot_dir="${OUT_DIR}/${ct}"
     local runtimes_dir="${plot_dir}/runtimes"
     local casts_dir="${plot_dir}/casts"
-    local mono_dir="${plot_dir}/mono"
+    local runtime_and_casts_count_dir="${plot_dir}/runtime_and_casts_count"
     local longest_proxy_chains_dir="${plot_dir}/longest_proxy_chains"
+    local runtime_and_longest_proxy_chain_dir="${plot_dir}/runtime_and_longest_proxy_chain"
     local all_dir="${plot_dir}/all"
     local cumulative_performance_dir="${plot_dir}/cum_perf"
 
     mkdir -p "$runtimes_dir"
     mkdir -p "$casts_dir"
-    mkdir -p "$mono_dir"
+    mkdir -p "$runtime_and_casts_count_dir"
     mkdir -p "$longest_proxy_chains_dir"
+    mkdir -p "$runtime_and_longest_proxy_chain_dir"
     mkdir -p "$all_dir"
     mkdir -p "$cumulative_performance_dir"
 
     local runtime_fig="${runtimes_dir}/${name}.png"
     local casts_count_fig="${casts_dir}/${name}.png"
-    local mono_fig="${mono_dir}/${name}.png"
+    local runtime_and_casts_count_fig="${runtime_and_casts_count_dir}/${name}.png"
     local longest_proxy_chain_fig="${longest_proxy_chains_dir}/${name}.png"
+    local runtime_and_longest_proxy_chain_fig="${runtime_and_longest_proxy_chain_dir}/${name}.png"
     local all_fig="${all_dir}/${name}.png"
     local cumulative_performance_fig="${cumulative_performance_dir}/${name}.png"
 
@@ -149,11 +152,11 @@ function plot_two_configs_coarse_benchmark()
             `"'${config2_log_sorted}' using 2:7 with points"`
             `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}'"
 
-    # not showing longest proxy chains for monotonic
+    # not showing longest proxy chains
     gnuplot -e "set datafile separator \",\";"`
             `"set terminal pngcairo size 1280,1500"`
             `"   enhanced color font 'Verdana,26' ;"`
-            `"set output '${mono_fig}';"`
+            `"set output '${runtime_and_casts_count_fig}';"`
             `"set lmargin at screen 0.15;"`
 	    `"set rmargin at screen 0.95;"`
 	    `"TOP=0.95;"`
@@ -163,9 +166,7 @@ function plot_two_configs_coarse_benchmark()
 	    `"unset ylabel;"`
 	    `"unset key;"`
 	    `"set xrange [0:100];"`
-	    `"max(x,y) = (x > y) ? x : y;"`
-	    `"set format x '';"`
-	    `"set yrange [0:*];"`
+	    `"set yrange [0:*];"` # set format y \"%.0t\";
             `"set label 2 \"Runtime casts count\" at screen 0.02,0.25 rotate by 90;"`
 	    `"set tmargin at screen TOP-DY;"`
 	    `"set bmargin at screen TOP+0.02-2*DY;"`
@@ -174,7 +175,8 @@ function plot_two_configs_coarse_benchmark()
             `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
             `"'${config2_log_sorted}' using 2:7 with points"`
             `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}';"`
-	    `"unset xtics; unset xlabel;"`
+	    `"set format x '';"`
+	    `"unset xlabel;"`
             `"set key opaque top right box vertical width 1 height 1 maxcols 1 spacing 1 font 'Verdana,20';"`
 	    `"set tmargin at screen TOP;"`
 	    `"set bmargin at screen TOP+0.02-DY;"`
@@ -187,6 +189,48 @@ function plot_two_configs_coarse_benchmark()
             `"${static_mean} lw 2 dt 2 lc \"blue\" title 'Static Grift',"`
             `"${dyn_mean} lw 2 lt 1 lc \"red\" title 'Dynamic Grift';"
 
+    # showing runtime and longest proxy chain all in one figure
+    gnuplot -e "set datafile separator \",\";"`
+            `"set terminal pngcairo size 1280,1500"`
+            `"   enhanced color font 'Verdana,26' ;"`
+            `"set output '${runtime_and_longest_proxy_chain_fig}';"`
+            `"set lmargin at screen 0.15;"`
+	    `"set rmargin at screen 0.95;"`
+	    `"TOP=0.95;"`
+	    `"DY = 0.45;"`
+	    `"set multiplot;"`
+            `"set xlabel \"How much of the code is typed\";"`
+	    `"unset ylabel;"`
+            `"set label 1 \"Longest proxy chain\" at screen 0.02,0.25 rotate by 90;"`
+	    `"set tmargin at screen TOP-DY;"`
+	    `"set bmargin at screen TOP+0.02-2*DY;"`
+	    `"unset key;"`
+	    `"set yrange [0:*];"`
+	    `"set ytics 0,1;"`
+	    `"set xrange [0:100];"`
+	    `"max(x,y) = (x > y) ? x : y;"`
+            `"plot '${config1_log_sorted}' using 2:(max(\$19, (max(\$20, \$21)))) with points"` 
+            `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
+	    `"'${config2_log_sorted}' using 2:(max(\$19, (max(\$20, \$21)))) with points"`
+            `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}';"`
+	    `"unset xtics;"`
+	    `"set ytics auto;"`
+	    `"unset xlabel;"`
+	    `"set format x '';"`
+	    `"set yrange [0:*];"`
+            `"set key opaque top right box vertical width 1 height 1 maxcols 1 spacing 1 font 'Verdana,20';"`
+	    `"set tmargin at screen TOP;"`
+	    `"set bmargin at screen TOP+0.02-DY;"`
+            `"set title \"${printname}\";"`
+            `"set label 3 \"Runtime in seconds\" at screen 0.02,0.75 rotate by 90;"`
+            `"plot '${config1_log_sorted}' using 2:3 with points"` 
+            `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
+            `"'${config2_log_sorted}' using 2:3 with points"`
+            `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}',"`
+            `"${static_mean} lw 2 dt 2 lc \"blue\" title 'Static Grift',"`
+            `"${dyn_mean} lw 2 lt 1 lc \"red\" title 'Dynamic Grift';"
+
+    
     # showing runtime, casts count, and longest proxy chain all in one figure
     gnuplot -e "set datafile separator \",\";"`
             `"set terminal pngcairo size 1280,1900"`
@@ -239,7 +283,7 @@ function plot_two_configs_coarse_benchmark()
 
         # cumulative performance figures
         gnuplot -e "set datafile separator \",\"; set terminal pngcairo "`
-                `"enhanced color font 'Verdana,10' size 1000,200;"`
+                `"enhanced color font 'Verdana,10' size 1000,400;"`
                 `"set output '${cumulative_performance_fig}';"`
                 `"set border 15 back;"`
                 `"set key opaque bottom right;"`
@@ -263,6 +307,6 @@ function plot_two_configs_coarse_benchmark()
                 `"set arrow from 8,graph(0,0) to 8,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
                 `"set arrow from 9,graph(0,0) to 9,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
                 `"set arrow from 10,graph(0,0) to 10,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
-                `"plot '${config1_log_sorted}' using 4:(1.) title '${c1t}' smooth cumulative,"`
-                `"     '${config2_log_sorted}' using 4:(1.) title '${c2t}' smooth cumulative"
+                `"plot '${config1_log_sorted}' using 4:(1.) lc rgb '$color1' title '${c1t}' smooth cumulative,"`
+                `"     '${config2_log_sorted}' using 4:(1.) lc rgb '$color2' title '${c2t}' smooth cumulative"
 }
