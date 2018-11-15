@@ -289,7 +289,8 @@ function plot_two_configs_coarse_benchmark()
                 `"set key samplen 2 font \",15\" top left;"`
                 `"set title \"${printname}\";"`
                 `"stats '${config2_log_sorted}' using 4 nooutput;"`
-                `"set yrange [1:STATS_records+1];"`
+		`"added = STATS_records*5/100;"`
+                `"set yrange [1:STATS_records+added];"`
 	        `"max(x,y) = (x > y) ? x : y;"`
                 `"set xrange [0:max(STATS_max, 20)];"`
                 `"set ytics (1, STATS_records/2, STATS_records);"`
