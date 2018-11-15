@@ -10,10 +10,13 @@ DYNAMIC_GRIFT_CONFIG ?=17
 
 .PHONY: external fine coarse all plot clean test-clean outputs
 
-all: coarse plot fine plot external
+all: coarse plot_coarse fine plot_fine external
 
-plot:
-	./plot_lattice.sh $(ROOT_DIR) $(DYNAMIC_GRIFT_CONFIG) $(CONFIGS)
+plot_coarse:
+	./plot_lattice.sh $(ROOT_DIR) coarse $(DYNAMIC_GRIFT_CONFIG) $(CONFIGS)
+
+plot_fine:
+	./plot_lattice.sh $(ROOT_DIR) fine $(DYNAMIC_GRIFT_CONFIG) $(CONFIGS)
 
 external:
 	./extremes.sh $(TIMING_SAMPLES) $(ROOT_DIR) $(BENCHMARK_DIR) $(IDEAL_CONFIGS)

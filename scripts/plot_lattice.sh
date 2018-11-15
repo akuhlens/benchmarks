@@ -3,13 +3,15 @@
 function main()
 {
     ROOT_DIR="$1";   shift
+    mode="$1";       shift
     dyn_config="$1"; shift
 
     declare -r LIB_DIR="${ROOT_DIR}/scripts/lib"
     declare -r LB_DIR="${ROOT_DIR}/lattice_bins"
+    echo "${LB_DIR}"
     if [ -z ${BENCHMARK_DIR+x} ]; then
 	# if the variable is not set, pick the most recent experiment directory
-	BENCHMARK_DIR=$(basename $(ls -td -- "${LB_DIR}/*/" | head -n 1))
+	BENCHMARK_DIR=$(basename $(ls -td -- "${LB_DIR}"/*/ | head -n 1))
 	echo "The directory: \"${BENCHMARK_DIR}\" is selected for plotting"
     fi
     declare -r EXP_DIR="${LB_DIR}/${BENCHMARK_DIR}"
@@ -26,15 +28,30 @@ function main()
     . ${LIB_DIR}/benchmarks.sh
     . ${LIB_DIR}/plotting_one_config_fine.sh
     . ${LIB_DIR}/plotting_two_configs_fine.sh
+    . ${LIB_DIR}/plotting_one_config_coarse.sh
+    . ${LIB_DIR}/plotting_two_configs_coarse.sh
 
     local i j
-    while (( "$#" )); do
-        i=$1; shift
-        j=$1; shift
-        plot_two_configs_fine $i $j $dyn_config
-	plot_one_config_fine $i $dyn_config
-	plot_one_config_fine $j $dyn_config
-    done
+    if [ "$mode" = "fine" ]; then
+	while (( "$#" )); do
+            i=$1; shift
+            j=$1; shift
+            plot_two_configs_fine $i $j $dyn_config
+	    plot_one_config_fine $i $dyn_config
+	    plot_one_config_fine $j $dyn_config
+	done
+    elif [ "$mode" = "coarse" ]; then
+	while (( "$#" )); do
+            i=$1; shift
+            j=$1; shift
+            plot_two_configs_coarse $i $j $dyn_config
+	    plot_one_config_coarse $i $dyn_config
+	    plot_one_config_coarse $j $dyn_config
+	done
+    else
+	echo "${mode} is invalid mode, fine or coarse are expected"
+	exit -1
+    fi
 }
 
 main "$@"
