@@ -198,8 +198,12 @@ function plot_two_configs_fine_benchmark()
             `"${static_mean} lw 2 dt 2 lc \"blue\" title 'Static Grift',"`
             `"${dyn_mean} lw 2 lt 1 lc \"red\" title 'Dynamic Grift';"
 
-    # showing runtime, casts count, and longest proxy chain all in one figure
-    gnuplot -e "set datafile separator \",\";"`
+    local max_longest_proxy_chain=$(awk 'BEGIN { max=0 } $8 > max { max=$8} END { print max }' FS="," "${config1_log_sorted}")
+
+    if [ "$max_longest_proxy_chain" -lt 11 ]; then
+	
+	# showing runtime, casts count, and longest proxy chain all in one figure
+	gnuplot -e "set datafile separator \",\";"`
             `"set terminal pngcairo size 1280,1900"`
             `"   enhanced color font 'Verdana,26' ;"`
             `"set output '${all_fig}';"`
@@ -252,6 +256,61 @@ function plot_two_configs_fine_benchmark()
             `"   pt 6 ps 3 palette title '${c2t}',"`
             `"${static_mean} lw 2 dt 2 lc \"blue\" title 'Static Grift',"`
             `"${dyn_mean} lw 2 lt 1 lc \"red\" title 'Dynamic Grift';"
+    else
+	# showing runtime, casts count, and longest proxy chain all in one figure
+	gnuplot -e "set datafile separator \",\";"`
+            `"set terminal pngcairo size 1280,1900"`
+            `"   enhanced color font 'Verdana,26' ;"`
+            `"set output '${all_fig}';"`
+            `"set lmargin at screen 0.15;"`
+	    `"set rmargin at screen 0.95;"`
+	    `"TOP=0.95;"`
+	    `"DY = 0.29;"`
+	    `"set multiplot;"`
+            `"set xlabel \"How much of the code is typed\";"`
+	    `"unset ylabel;"`
+            `"set label 1 \"Longest proxy chain\" at screen 0.02,0.15 rotate by 90;"`
+	    `"set tmargin at screen TOP-2*DY;"`
+	    `"set bmargin at screen TOP-3*DY;"`
+	    `"unset key;"`
+	    `"stats '${config1_log_sorted}' using 19 nooutput;"`
+	    `"set xrange [0:STATS_records+10];"`
+	    `"divby=STATS_records/4;"`
+	    `"set xtics ('0%%' 0, '25%%' divby, '50%%' divby*2, '75%%' divby*3, '100%%' divby*4) nomirror;"`
+	    `"max(x,y) = (x > y) ? x : y;"`
+	    `"set yrange [0:*];"`
+            `"plot '${config1_log_sorted}' using 0:(max(\$19, (max(\$20, \$21)))) with points"` 
+            `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
+	    `"'${config2_log_sorted}' using 0:(max(\$19, (max(\$20, \$21)))) with points"`
+            `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}';"`
+	    `"unset xtics;"`
+	    `"unset xlabel;"`
+	    `"set format x '';"`
+	    `"set yrange [0:*];"`
+	    `"set ytics auto;"`
+            `"set label 2 \"Runtime casts count\" at screen 0.02,0.45 rotate by 90;"`
+	    `"set tmargin at screen TOP-DY;"`
+	    `"set bmargin at screen TOP+0.02-2*DY;"`
+	    `"unset key;"`
+            `"plot '${config1_log_sorted}' using 0:7 with points"` 
+            `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
+            `"'${config2_log_sorted}' using 0:7 with points"`
+            `"   pt 6 ps 3 lc rgb '$color2' title '${c2t}';"`
+            `"set key opaque top right box vertical width 1 height 1 maxcols 1 spacing 1 font 'Verdana,20';"`
+	    `"set tmargin at screen TOP;"`
+	    `"set bmargin at screen TOP+0.02-DY;"`
+            `"set title \"${printname}\";"`
+            `"set label 3 \"Runtime in seconds\" at screen 0.02,0.75 rotate by 90;"`
+	    `"set palette maxcolors 2;"`
+	    `"set palette model RGB defined ( 0 '$color2', 1 '$color2' );"`
+	    `"unset colorbox;"`
+            `"plot '${config1_log_sorted}' using 0:( strcol(1) eq \"dyn\" ? NaN : \$3 ) with points"` 
+            `"   pt 9 ps 3 lc rgb '$color1' title '${c1t}',"`
+            `"'${config2_log_sorted}' using 0:( strcol(1) eq \"dyn\" ? NaN : \$3 ):( \$8 > 50 ? 0 : 1 ) with points"`
+            `"   pt 6 ps 3 palette title '${c2t}',"`
+            `"${static_mean} lw 2 dt 2 lc \"blue\" title 'Static Grift',"`
+            `"${dyn_mean} lw 2 lt 1 lc \"red\" title 'Dynamic Grift';"
+    fi
 
         # cumulative performance figures
         gnuplot -e "set datafile separator \",\"; set terminal pngcairo "`
