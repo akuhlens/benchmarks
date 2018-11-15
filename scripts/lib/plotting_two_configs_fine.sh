@@ -62,9 +62,6 @@ function plot_two_configs_fine_benchmark()
     local config1_log_sorted="${DATA_DIR}/${name}${c1}.log.sorted"
     local config2_log_sorted="${DATA_DIR}/${name}${c2}.log.sorted"
 
-    local config1_cumulative_log="${DATA_DIR}/${name}${c1}.csv"
-    local config2_cumulative_log="${DATA_DIR}/${name}${c2}.csv"
-
     if [ ! -f "$config1_log" ]; then
 	echo "Warning: log file at path: ${config1_log} is not found"
 	return
@@ -103,25 +100,6 @@ function plot_two_configs_fine_benchmark()
 
     dyn_mean=$(cat "${TMP_DIR}/dyn/${name}${disk_aux_name}${dyn_config}.runtime")
     static_mean=$(cat "${TMP_DIR}/static/${name}/single/${name}${disk_aux_name}.static.runtime")
-
-    # create data files for the cummulative performance figures
-    if [ ! -f "$config1_cumulative_log" ]; then
-	tail -n +2 "$config1_log_sorted" |\
-	    awk -F "," -v x="$dyn_mean" '{printf "%4.2f\n", $3/x }' | \
-            sort | \
-            uniq -c | \
-            awk ' { t = $1; $1 = $2; $2 = t; print; } ' | \
-            awk '{ $1=$1" ,";; print }' > "$config1_cumulative_log"
-    fi
-
-    if [ ! -f "$config2_cumulative_log" ]; then
-	tail -n +2 "$config2_log_sorted" |\
-	    awk -F "," -v x="$dyn_mean" '{printf "%4.2f\n", $3/x }' | \
-            sort | \
-            uniq -c | \
-            awk ' { t = $1; $1 = $2; $2 = t; print; } ' | \
-            awk '{ $1=$1" ,";; print }' > "$config2_cumulative_log"
-    fi
 
     # longest proxy chain figure
     gnuplot -e "set datafile separator \",\";"`
@@ -277,16 +255,30 @@ function plot_two_configs_fine_benchmark()
 
         # cumulative performance figures
         gnuplot -e "set datafile separator \",\"; set terminal pngcairo "`
-                `"enhanced color font 'Verdana,10' ;"`
+                `"enhanced color font 'Verdana,10' size 1000,200;"`
                 `"set output '${cumulative_performance_fig}';"`
                 `"set border 15 back;"`
+                `"set key opaque bottom right;"`
                 `"set title \"${printname}\";"`
-                `"stats '${config1_log_sorted}' nooutput;"`
-                `"set yrange [0:STATS_records];"`
-                `"set xrange [0:10];"`
-                `"set xtics nomirror (\"1x\" 1,\"2x\" 2,\"3x\" 3,\"4x\" 4,\"5x\" 5, \"6x\" 6,\"7x\" 7, \"8x\" 8, \"9x\" 9, \"10x\" 10, \"15x\" 15, \"20x\" 20);"`
-                `"set ytics nomirror 0,200;"`
+                `"stats '${config2_log_sorted}' using 4 nooutput;"`
+                `"set yrange [1:STATS_records];"`
+	        `"max(x,y) = (x > y) ? x : y;"`
+                `"set xrange [0:max(STATS_max, 20)];"`
+                `"set ytics (1, STATS_records/2, STATS_records);"`
+		`"set logscale x;"`
+		`"round(x) = x - floor(x) < 0.5 ? floor(x) : ceil(x);"`
+		`"round2(x, n) = round(x*10**n)*10.0**(-n);"`
+                `"set xtics nomirror (1, 2, max(round2(STATS_max, 2), 20));"`
                 `"set arrow from 1,graph(0,0) to 1,graph(1,1) nohead lc rgb \"black\" lw 2;"`
-                `"plot '${config1_cumulative_log}' using 1:2 with lines lw 2 dt 4 title '${c1t}' smooth cumulative,"`
-                `"     '${config2_cumulative_log}' using 1:2 with lines lw 2 dt 2 title '${c2t}' smooth cumulative"
+                `"set arrow from 2,graph(0,0) to 2,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
+                `"set arrow from 3,graph(0,0) to 3,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
+                `"set arrow from 4,graph(0,0) to 4,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
+                `"set arrow from 5,graph(0,0) to 5,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
+                `"set arrow from 6,graph(0,0) to 6,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
+                `"set arrow from 7,graph(0,0) to 7,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
+                `"set arrow from 8,graph(0,0) to 8,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
+                `"set arrow from 9,graph(0,0) to 9,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
+                `"set arrow from 10,graph(0,0) to 10,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
+                `"plot '${config1_log_sorted}' using 4:(1.) title '${c1t}' smooth cumulative,"`
+                `"     '${config2_log_sorted}' using 4:(1.) title '${c2t}' smooth cumulative"
 }
