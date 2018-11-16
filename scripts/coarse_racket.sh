@@ -30,7 +30,7 @@ run_config()
         local n=0 b
         $baseline_system "$name" "$input_filename" "$disk_aux_name"
         local baseline="$RETURN"
-        echo "name,precision,time,slowdown,speedup" > "$logfile"
+        echo "name,time,slowdown,speedup" > "$logfile"
         for sample_path in "$samples_directory_path/"*/; do
             let n=n+1
             local sample_number="$(basename $sample_path)"
