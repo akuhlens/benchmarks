@@ -34,6 +34,9 @@ Correct output N = 1000 is
 ;; suite.
 ;; Removed unsafe operation because we are only interested
 ;; in safe program performance.
+
+(require require-typed-check)
+
 (require racket/flonum)
 
 (require/typed/check "system.rkt"

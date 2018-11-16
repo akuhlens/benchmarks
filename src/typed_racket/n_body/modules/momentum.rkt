@@ -1,5 +1,7 @@
 #lang typed/racket/base
 
+(require require-typed-check)
+
 (require racket/flonum)
 
 (define-type Body (Vector Flonum Flonum Flonum Flonum Flonum Flonum Flonum))
