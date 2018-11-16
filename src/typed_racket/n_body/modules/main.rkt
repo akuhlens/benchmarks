@@ -53,34 +53,34 @@ Correct output N = 1000 is
        (unless (= o *system-size*)
          (let* ([o1 (vector-ref *system* o)])
            (let loop-i ([i  (+ o 1)]
-                        [vx (body-vx o1)]
-                        [vy (body-vy o1)]
-                        [vz (body-vz o1)])
+                        [vx (vector-ref o1 3)]
+                        [vy (vector-ref o1 4)]
+                        [vz (vector-ref o1 5)])
              (if (< i *system-size*)
                  (let* ([i1    (vector-ref *system* i)]
-                        [dx    (fl- (body-x o1) (body-x i1))]
-                        [dy    (fl- (body-y o1) (body-y i1))]
-                        [dz    (fl- (body-z o1) (body-z i1))]
+                        [dx    (fl- (vector-ref o1 0) (vector-ref i1 0))]
+                        [dy    (fl- (vector-ref o1 1) (vector-ref i1 1))]
+                        [dz    (fl- (vector-ref o1 2) (vector-ref i1 2))]
                         [dist2 (fl+ (fl+ (fl* dx dx) (fl* dy dy)) (fl* dz dz))]
                         [mag   (fl/ +dt+ (fl* dist2 (flsqrt dist2)))]
                         [dxmag (fl* dx mag)]
                         [dymag (fl* dy mag)]
                         [dzmag (fl* dz mag)]
-                        [om (body-mass o1)]
-                        [im (body-mass i1)])
-                   (set-body-vx! i1 (fl+ (body-vx i1) (fl* dxmag om)))
-                   (set-body-vy! i1 (fl+ (body-vy i1) (fl* dymag om)))
-                   (set-body-vz! i1 (fl+ (body-vz i1) (fl* dzmag om)))
+                        [om (vector-ref o1 6)]
+                        [im (vector-ref i1 6)])
+                   (vector-set! i1 3 (fl+ (vector-ref i1 3) (fl* dxmag om)))
+                   (vector-set! i1 4 (fl+ (vector-ref i1 4) (fl* dymag om)))
+                   (vector-set! i1 5 (fl+ (vector-ref i1 5) (fl* dzmag om)))
                    (loop-i (+ i 1)
                            (fl- vx (fl* dxmag im))
                            (fl- vy (fl* dymag im))
                            (fl- vz (fl* dzmag im))))
-                 (begin (set-body-vx! o1 vx)
-                        (set-body-vy! o1 vy)
-                        (set-body-vz! o1 vz)
-                        (set-body-x! o1 (fl+ (body-x o1) (fl* +dt+ vx)))
-                        (set-body-y! o1 (fl+ (body-y o1) (fl* +dt+ vy)))
-                        (set-body-z! o1 (fl+ (body-z o1) (fl* +dt+ vz)))))))
+                 (begin (vector-set! o1 3 vx)
+                        (vector-set! o1 4 vy)
+                        (vector-set! o1 5 vz)
+                        (vector-set! o1 0 (fl+ (vector-ref o1 0) (fl* +dt+ vx)))
+                        (vector-set! o1 1 (fl+ (vector-ref o1 1) (fl* +dt+ vy)))
+                        (vector-set! o1 2 (fl+ (vector-ref o1 2) (fl* +dt+ vz)))))))
          (loop-o (+ o 1)))))
 
 (define (main)
