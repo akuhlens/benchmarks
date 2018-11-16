@@ -27,8 +27,8 @@ fine:
 
 coarse:
 	./coarse_racket.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR)
-	./lattice_bins.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
-		$(BIN_SAMPLES) $(NUM_BINS) $(CONFIGS)
+	# ./lattice_bins.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
+	# 	$(BIN_SAMPLES) $(NUM_BINS) $(CONFIGS)
 
 test:
 	TIMING_SAMPLES=1 BIN_SAMPLES=1 NUM_BINS=20 BENCHMARK_DIR=$(TEST_DIR) ROOT_DIR=".." \
