@@ -5,11 +5,12 @@
 
 (require require-typed-check)
 
+;; A stream is a cons of a value and a thunk that computes the next value when applied
+(define-type stream (Rec s (Pair Natural (-> s))))
+
 (require/typed/check "streams.rkt"
-  [stream (Rec s (Pair Natural (-> s)))]
   [make-stream (-> Natural (-> stream) stream)]
   [stream-unfold (-> stream (Pair Natural stream))]
-  [stream-get (-> stream Natural Natural)]
   [stream-first (stream -> Natural)]
   [stream-rest (stream -> stream)]
   [stream-get (-> stream Natural Natural)])

@@ -4,14 +4,10 @@ set -euo pipefail
 declare -r PRECISION=5
 TIMEFORMAT=%R
 
-# needed for the fft benchmarks
-ulimit -s unlimited
-
 # needed so that anyone can access the files
 umask 000
 
 # $1 - baseline system
-# $2 - configuration index
 # $3 - directory path of the samples, it should have the binaries. Also, the
 #      directory name is the same as the benchmark name
 # $4 - space-separated benchmark arguments
@@ -20,14 +16,13 @@ umask 000
 run_config()
 {
     local baseline_system="$1";        shift
-    local config_index="$1";           shift
     local samples_directory_path="$1"; shift
     local input_filename="$1";         shift
     local disk_aux_name="$1";          shift
 
     local name=$(basename "$samples_directory_path")
-    local logfile="${DATA_DIR}/${name}${disk_aux_name}${config_index}.log"
-    local cache_file="${TMP_DIR}/typed_racket/${name}${disk_aux_name}${config_index}.cache"
+    local logfile="${DATA_DIR}/${name}${disk_aux_name}.log"
+    local cache_file="${TMP_DIR}/typed_racket/${name}${disk_aux_name}.cache"
 
     if [ -f $cache_file ]; then
         RETURN=$(cat "$cache_file")
@@ -35,24 +30,12 @@ run_config()
         local n=0 b
         $baseline_system "$name" "$input_filename" "$disk_aux_name"
         local baseline="$RETURN"
-        if [ "$CAST_PROFILER" = true ]; then
-            echo "name,precision,time,slowdown,speedup,total values allocated,total casts,longest proxy chain,total proxies accessed,total uses,function total values allocated,vector total values allocated,ref total values allocated,tuple total values allocated,function total casts,vector total casts, ref total casts,tuple total casts,function longest proxy chain,vector longest proxy chain,ref longest proxy chain,tuple longest proxy chain,function total proxies accessed,vector total proxies accessed,ref total proxies accessed,tuple total proxies accessed,function total uses,vector total uses,ref total uses,tuple total uses,injects casts,projects casts"\
-                 > "$logfile"
-        else
-            echo "name,precision,time,slowdown,speedup" > "$logfile"
-        fi
-        for sample_path in $(find "$samples_directory_path" -name "*.o${config_index}"); do
+        echo "name,precision,time,slowdown,speedup" > "$logfile"
+        for sample_path in "$samples_directory_path/"*/; do
             let n=n+1
-            local sample_path_without_extension="${sample_path%.*}"
-            local p=$(sed -n 's/;; \([0-9]*.[0-9]*\)%/\1/p;q' \
-                          < "${sample_path_without_extension}.grift")
-            local sample_number="$(basename $sample_path_without_extension)"
-            local sample_bin_filename="$(basename $sample_path)"
-            local input_filepath="${INPUT_DIR}/${name}/${input_filename}"
+            local sample_number="$(basename $sample_path)"
 
-            avg "$sample_path" "$input_filepath"\
-                "static" "${OUTPUT_DIR}/static/${name}/${input_filename}"\
-                "${sample_path}.runtimes"
+	    get_typed_racket_config_runtime "$name" "$sample_path" "${input_filename}" "$disk_aux_name"
             local t="$RETURN"
             local speedup=$(echo "${baseline}/${t}" | \
                                 bc -l | \
@@ -62,7 +45,7 @@ run_config()
                                  awk -v p="$PRECISION" '{printf "%.*f\n", p,$0}')
             echo $n $sample_path $speedup
             printf "%s,%.2f,%.${PRECISION}f,%.${PRECISION}f,%.${PRECISION}f" \
-                   $sample_number $p $t $slowdown $speedup >> "$logfile"
+                   $sample_number $t $slowdown $speedup >> "$logfile"
 
             printf "\n" >> "$logfile"
         done
@@ -74,67 +57,39 @@ run_config()
 # $1  - baseline system
 # $2  - statically typed system
 # $3  - dynamically typed system
-# $4  - first config index
-# $5  - second config index
 # $6  - $samples_directory_path
 # $7  - space-separated benchmark arguments
-# $8  - output of dynamizer
-# $9  - printed name of the benchmark
 # $10 - disk aux name
 gen_output()
 {
     local baseline_system="$1";        shift
     local static_system="$1";          shift
     local dynamic_system="$1";         shift
-    local config1_index="$1";          shift
-    local config2_index="$1";          shift
     local samples_directory_path="$1"; shift
     local input_filename="$1";         shift
     local disk_aux_name="$1";          shift
 
     local name=$(basename "$samples_directory_path")
-    local logfile1="${DATA_DIR}/${name}${disk_aux_name}${config1_index}.log"
-    local logfile2="${DATA_DIR}/${name}${disk_aux_name}${config2_index}.log"
 
-    run_config $baseline_system "$config1_index" "$samples_directory_path" "$input_filename" "$disk_aux_name"
+    run_config $baseline_system "$samples_directory_path" "$input_filename" "$disk_aux_name"
 
-    # $static_system "$name" "$input_filename" "$disk_aux_name"
-    # $dynamic_system "$name" "$input_filename" "$disk_aux_name"
-
-    speedup_geometric_mean "$logfile1"
-    g1="$RETURN"
-
-    speedup_geometric_mean "$logfile2"
-    g2="$RETURN"
-
-    printf "geometric means %s:\t\t%d=%.4f\t%d=%.4f\n" $name $config1_index $g1 $config2_index $g2
-
-    racket ${LIB_DIR}/csv-set.rkt --add "$name , $config1_index , $g1"\
-           --add "$name , $config2_index , $g2"\
-           --in "$GMEANS" --out "$GMEANS"
+    $static_system "$name" "$input_filename" "$disk_aux_name"
+    $dynamic_system "$name" "$input_filename" "$disk_aux_name"
 }
 
 # $1  - baseline system
 # $2  - statically typed system
 # $3  - dynamically typed system
-# $4  - first config index
-# $5  - second config index
 # $6  - benchmark filename without extension
 # $7  - space-separated benchmark arguments
-# $8  - nsamples
-# $9  - nbins
 # $10 - aux name
 run_benchmark()
 {
     local baseline_system="$1"; shift
     local static_system="$1";   shift
     local dynamic_system="$1";  shift
-    local config1_index="$1";   shift
-    local config2_index="$1";   shift
     local benchmark_name="$1";  shift
     local input_filename="$1";  shift
-    local nsamples="$1";        shift
-    local nbins="$1";           shift
     local aux_name="$1";        shift
 
     local samples_directory_path="${TMP_DIR}/partial/${benchmark_name}"
@@ -168,52 +123,31 @@ run_benchmark()
     racket ../typed_racket_benchmarks/utilities/make-configurations.rkt "${TMP_DIR}/partial"
     
     # the source is created by the typed racket dynamizer
-    mv "${TMP_DIR}/partial-configurations" "${samples_directory_path}"
+    mv "partial-configurations" "${samples_directory_path}"
     # deleting the source files so it does not mingle with sources of
     # other benchmarks where modules might happen to share the same name
-    rm "${TMP_DIR}/partial/typed" "${TMP_DIR}/partial/untyped"
+    rm -rf "${TMP_DIR}/partial/typed" "${TMP_DIR}/partial/untyped"
 
-    gen_output $baseline_system $static_system $dynamic_system $config1_index $config2_index\
-               "$samples_directory_path" "$input_filename" "$disk_aux_name"
+    gen_output $baseline_system $static_system $dynamic_system "$samples_directory_path" "$input_filename" "$disk_aux_name"
 }
 
 # $1 - baseline system
 # $2 - statically typed system
 # $3 - dynamically typed system
-# $4 - first config index
-# $5 - second config index
-# $6 - nsamples
-# $7 - nbins
 run_experiment()
 {
     local baseline_system="$1"; shift
     local static_system="$1";   shift
     local dynamic_system="$1";  shift
-    local config1_index="$1";              shift
-    local config2_index="$1";              shift
-    local nsamples="$1";        shift
-    local nbins="$1";           shift
-
-    local g=()
 
     for ((i=0;i<${#BENCHMARKS[@]};++i)); do
-        run_benchmark $baseline_system $static_system $dynamic_system $config1_index $config2_index\
-                      "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_LATTICE[i]}"\
-                      "$nsamples" "$nbins" ""
-        g+=($RETURN)
+        run_benchmark $baseline_system $static_system $dynamic_system "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_LATTICE[i]}"  ""
     done
-
-    IFS=$'\n'
-    max=$(echo "${g[*]}" | sort -nr | head -n1)
-    min=$(echo "${g[*]}" | sort -n | head -n1)
-
-    echo "finished experiment comparing" $config1_index "vs" $config2_index \
-         ", where speedups range from " $min " to " $max
 }
 
 main()
 {
-    USAGE="Usage: $0 root loops [fresh|date] cast_profiler? [fine|coarse] nsamples nbins n_1,n_2 ... n_n"
+    USAGE="Usage: $0 root loops [fresh|date]"
     if [ "$#" == "0" ]; then
         echo "$USAGE"
         exit 1
@@ -221,10 +155,6 @@ main()
     ROOT_DIR="$1";       shift
     LOOPS="$1";          shift
     local date="$1";     shift
-    CAST_PROFILER="$1";  shift
-    local LEVEL="$1";    shift
-    local nsamples="$1"; shift
-    local nbins="$1";    shift
 
     declare -r LB_DIR="${ROOT_DIR}/coarse_racket"
     if [ "$date" == "fresh" ]; then
@@ -278,8 +208,6 @@ main()
     # create the result directory if it does not exist
     mkdir -p "$DATA_DIR"
     mkdir -p "$OUT_DIR"
-    rm -f $GMEANS
-    touch $GMEANS
 
     . "${LIB_DIR}/runtime.sh"
     . "${LIB_DIR}/benchmarks.sh"
@@ -308,39 +236,9 @@ main()
         chezscheme_ver=$(chez-scheme --version 2>&1)
         printf "ChezScheme ver.\t:%s\n" "$chezscheme_ver" >> "$PARAMS_LOG"
         printf "loops:\t\t:%s\n" "$LOOPS" >> "$PARAMS_LOG"
-        printf "nsamples\t:%s\n" "$nsamples" >> "$PARAMS_LOG"
-        printf "nbins\t:%s\n" "$nbins" >> "$PARAMS_LOG"
     fi
 
-    local i j
-    if [ "$#" == "1" ]; then
-        local config="$1";   shift
-        for i in `seq ${config}`; do
-            for j in `seq ${i} ${config}`; do
-                if [ ! $i -eq $j ]; then
-                    run_experiment $baseline_system $static_system \
-                                   $dynamic_system $i $j $nsamples $nbins
-                fi
-            done
-        done
-    else
-        while (( "$#" )); do
-            i=$1; shift
-            j=$1; shift
-            run_experiment $baseline_system $static_system $dynamic_system $i\
-                           $j $nsamples $nbins
-        done
-    fi
-
-    racket ${LIB_DIR}/csv-set.rkt -i $GMEANS --config-names 1 \
-           --si 2 \
-           -o ${OUT_DIR}/gm-total.csv
-    racket ${LIB_DIR}/csv-set.rkt -i $GMEANS --config-names 1 \
-           --si 2 --su 0 \
-           -o ${OUT_DIR}/gm-benchmart.csv
-    racket ${LIB_DIR}/csv-set.rkt -i $GMEANS --config-names 1 \
-           --si 2 --su 1 \
-           -o ${OUT_DIR}/gm-config.csv
+    run_experiment $baseline_system $static_system $dynamic_system
 
     echo "done."
 }

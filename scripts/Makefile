@@ -26,6 +26,7 @@ fine:
 		$(BIN_SAMPLES) $(NUM_BINS) $(CONFIGS)
 
 coarse:
+	./coarse_racket.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR)
 	./lattice_bins.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
 		$(BIN_SAMPLES) $(NUM_BINS) $(CONFIGS)
 

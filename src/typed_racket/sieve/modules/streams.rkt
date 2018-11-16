@@ -11,7 +11,7 @@
  stream-unfold
  stream-get)
 
-;; ;; A stream is a cons of a value and a thunk that computes the next value when applied
+;; A stream is a cons of a value and a thunk that computes the next value when applied
 (define-type stream (Rec s (Pair Natural (-> s))))
 
 (: stream-first : stream -> Natural)
