@@ -13,7 +13,10 @@
                      [point-z (Point -> Flonum)])
 
 (require/typed/check "math.rkt"
-                     [black-scholes (Flonum Flonum Flonum Flonum Flonum Integer Flonum -> Flonum)])
+                     [sq (Flonum -> Flonum)]
+                     [mag (Flonum Flonum Flonum -> Flonum)]
+                     [unit-vector (Flonum Flonum Flonum -> Point)]
+                     [distance (Point Point -> Float)])
 
 (provide make-sphere
          sphere-color
