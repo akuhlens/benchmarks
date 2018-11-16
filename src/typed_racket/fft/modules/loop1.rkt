@@ -10,8 +10,8 @@
 
 (require racket/flonum)
 
-(export pi*2
-        loop1)
+(provide pi*2
+         loop1)
 
 (define pi*2 : Flonum #i6.28318530717959)
 
