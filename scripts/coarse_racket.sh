@@ -116,19 +116,21 @@ run_benchmark()
         echo "$input" > "$benchmark_args_file"
     fi
 
-    rm -rf "$samples_directory_path"
-    cp -a "$static_source_path/" "${TMP_DIR}/partial/typed"
-    cp -a "$dyn_source_path/" "${TMP_DIR}/partial/untyped"
-
-    racket ../typed_racket_benchmarks/utilities/make-configurations.rkt "${TMP_DIR}/partial"
+    if [ ! -d "$samples_directory_path" ]; then
+	# rm -rf "$samples_directory_path"
+	cp -a "$static_source_path/" "${TMP_DIR}/partial/typed"
+	cp -a "$dyn_source_path/" "${TMP_DIR}/partial/untyped"
+	
+	racket ../typed_racket_benchmarks/utilities/make-configurations.rkt "${TMP_DIR}/partial"
     
-    # the source is created by the typed racket dynamizer
-    mv "partial-configurations" "${samples_directory_path}"
-    # deleting the source files so it does not mingle with sources of
-    # other benchmarks where modules might happen to share the same name
-    rm -rf "${TMP_DIR}/partial/typed" "${TMP_DIR}/partial/untyped"
-
-    gen_output $baseline_system $static_system $dynamic_system "$samples_directory_path" "$input_filename" "$disk_aux_name"
+	# the source is created by the typed racket dynamizer
+	mv "partial-configurations" "${samples_directory_path}"
+	# deleting the source files so it does not mingle with sources of
+	# other benchmarks where modules might happen to share the same name
+	rm -rf "${TMP_DIR}/partial/typed" "${TMP_DIR}/partial/untyped"
+	
+	gen_output $baseline_system $static_system $dynamic_system "$samples_directory_path" "$input_filename" "$disk_aux_name"
+    fi
 }
 
 # $1 - baseline system
