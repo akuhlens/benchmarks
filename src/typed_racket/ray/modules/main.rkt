@@ -42,7 +42,7 @@
                      [make-sphere (Color Radius Point -> Sphere)]
                      [sphere-color (Sphere -> Color)]
                      [sphere-radius (Sphere -> Radius)]
-                     [sphere-center : (Sphere -> Point)]
+                     [sphere-center (Sphere -> Point)]
                      [sphere-normal (Sphere Point -> Point)])
 
 (require/typed/check "helper.rkt"
