@@ -8,16 +8,27 @@ function main()
 
     declare -r LIB_DIR="${ROOT_DIR}/scripts/lib"
     declare -r LB_DIR="${ROOT_DIR}/lattice_bins"
+    declare -r RKT_DIR="${ROOT_DIR}/coarse_racket"
     echo "${LB_DIR}"
     if [ -z ${BENCHMARK_DIR+x} ]; then
 	# if the variable is not set, pick the most recent experiment directory
 	BENCHMARK_DIR=$(basename $(ls -td -- "${LB_DIR}"/*/ | head -n 1))
 	echo "The directory: \"${BENCHMARK_DIR}\" is selected for plotting"
     fi
+    if [ -z ${RKT_BENCHMARK_DIR+x} ]; then
+	# if the variable is not set, pick the most recent experiment directory
+	RKT_BENCHMARK_DIR=$(basename $(ls -td -- "${RKT_DIR}"/*/ | head -n 1))
+	echo "The directory: \"${RKT_BENCHMARK_DIR}\" is selected for plotting"
+    fi
     declare -r EXP_DIR="${LB_DIR}/${BENCHMARK_DIR}"
     declare -r DATA_DIR="${EXP_DIR}/data"
     declare -r OUT_DIR="${EXP_DIR}/output"
     declare -r TMP_DIR="${EXP_DIR}/tmp"
+
+    declare -r RKT_EXP_DIR="${RKT_DIR}/${RKT_BENCHMARK_DIR}"
+    declare -r RKT_DATA_DIR="${RKT_EXP_DIR}/data"
+    declare -r RKT_OUT_DIR="${RKT_EXP_DIR}/output"
+    declare -r RKT_TMP_DIR="${RKT_EXP_DIR}/tmp"
 
     DPURPLE='#7b3294'
     DGREEN='#008837'
@@ -29,7 +40,8 @@ function main()
     . ${LIB_DIR}/plotting_one_config_fine.sh
     . ${LIB_DIR}/plotting_two_configs_fine.sh
     . ${LIB_DIR}/plotting_one_config_coarse.sh
-    . ${LIB_DIR}/plotting_two_configs_coarse.sh
+    # . ${LIB_DIR}/plotting_two_configs_coarse.sh
+    . ${LIB_DIR}/plotting_two_configs_and_racket_coarse.sh
 
     local i j
     if [ "$mode" = "fine" ]; then
@@ -44,7 +56,7 @@ function main()
 	while (( "$#" )); do
             i=$1; shift
             j=$1; shift
-            plot_two_configs_coarse $i $j $dyn_config
+            plot_two_configs_and_racket_coarse $i $j $dyn_config
 	    plot_one_config_coarse $i $dyn_config
 	    plot_one_config_coarse $j $dyn_config
 	done
