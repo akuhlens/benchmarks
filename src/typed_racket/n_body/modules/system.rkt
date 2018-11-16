@@ -1,14 +1,16 @@
 #lang typed/racket/base
 
+(require require-typed-check)
+
 (require racket/flonum)
 
 (require/typed/check "body.rkt"
   [make-body (Flonum Flonum Flonum Flonum Flonum Flonum Flonum -> Body)])
 
 (provide +solar-mass+
-        +dt+
-        *system*
-        *system-size* )
+         +dt+
+         *system*
+         *system-size* )
 
 (define +pi+ : Flonum 3.141592653589793) ;; define locally to enable inlining
 (define +days-per-year+ : Flonum 365.24)
