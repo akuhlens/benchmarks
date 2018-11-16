@@ -51,7 +51,7 @@ Correct output N = 1000 is
   [offset-momentum (-> Void)])
 
 (require/typed/check "energy.rkt"
-  [energy : (-> Flonum)])
+  [energy (-> Flonum)])
 
 (define (advance)
   (let loop-o : Void ([o : Integer 0])
