@@ -15,7 +15,7 @@
 ;;; generic primitives like +. (According to the documentation)
 (require racket/flonum)
 
-(export black-scholes)
+(provide black-scholes)
 
 (define inv-sqrt-2x-pi 0.39894228040143270286)
 
