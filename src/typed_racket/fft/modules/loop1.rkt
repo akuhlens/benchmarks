@@ -38,4 +38,4 @@
   (define (loop2 m j i size data)
     (if (and (>= m 2) (>= j m))
         (loop2 (quotient m 2) (- j m) i size data)
-        (loop1 (+ i 2) (+ j m) sie data)))
+        (loop1 (+ i 2) (+ j m) size data)))
