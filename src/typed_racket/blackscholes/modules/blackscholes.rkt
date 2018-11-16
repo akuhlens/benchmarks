@@ -1,6 +1,6 @@
 #lang typed/racket/base
 
-(export black-scholes)
+(provide black-scholes)
 
 (define inv-sqrt-2x-pi : Flonum 0.39894228040143270286)
 
