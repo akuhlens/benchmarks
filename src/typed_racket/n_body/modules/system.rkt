@@ -4,6 +4,8 @@
 
 (require racket/flonum)
 
+(define-type Body (Vector Flonum Flonum Flonum Flonum Flonum Flonum Flonum))
+
 (require/typed/check "body.rkt"
   [make-body (Flonum Flonum Flonum Flonum Flonum Flonum Flonum -> Body)])
 

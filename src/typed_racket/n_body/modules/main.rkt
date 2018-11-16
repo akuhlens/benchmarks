@@ -39,6 +39,8 @@ Correct output N = 1000 is
 
 (require racket/flonum)
 
+(define-type Body (Vector Flonum Flonum Flonum Flonum Flonum Flonum Flonum))
+
 (require/typed/check "system.rkt"
   [+solar-mass+ Flonum]
   [+dt+ Flonum]
