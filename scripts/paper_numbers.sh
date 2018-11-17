@@ -51,8 +51,11 @@ function run_double()
     local c2t=$(echo $config_str | sed -n 's/.*,\(.*\),.*/\1/p;q')
     local ct=$(echo $config_str | sed -n 's/.*,.*,\(.*\)/\1/p;q')
 
-    # Blackscholes
+    # sieve
     run_two_benchmarks $c1 $c2 "$ct" "$c1t" "$c2t" "blackscholes" "in_4K.txt"
+
+    # Blackscholes
+    run_two_benchmarks $c1 $c2 "$ct" "$c1t" "$c2t" "sieve" "fast.txt"
 
     # Quicksort
     run_two_benchmarks $c1 $c2 "$ct" "$c1t" "$c2t" "quicksort" "in_descend1000.txt"
@@ -72,6 +75,7 @@ function run_double()
     # Tak
     run_two_benchmarks $c1 $c2 "$ct" "$c1t" "$c2t" "tak" "slow.txt"
 
+    # ray
     run_two_benchmarks $c1 $c2 "$ct" "$c1t" "$c2t" "ray" "empty.txt"
 
     echo "finished comparing $c1t to $c2t with $ct, where speedups range from "\
