@@ -189,8 +189,6 @@ function run_two_benchmarks()
     local logfile3="${logfile1}.sorted1"
     local logfile4="${logfile2}.sorted1"
 
-    # delete the extension from file names in the logfile so that we can sort them
-    #tail -n +2 "$logfile1" | sed "s/.o${c1}//1" | sort -k1 -n -t, > "${logfile3}"
     tail -n +2 "$logfile1" | sort -k1 -n -t, > "${logfile3}"
     tail -n +2 "$logfile2" | sort -k1 -n -t, > "${logfile4}"
 
@@ -201,7 +199,7 @@ function run_two_benchmarks()
     paste -d , "$tmp1_logfile" "$tmp2_logfile" > "$tmp3_logfile"
 
     # compute speedup of the first config over the second
-    awk  -F "," '{printf "%4.2f\n", $2/$1 }' "$tmp3_logfile" > "$tmp4_logfile"
+    awk  -F "," '{printf "%4.5f\n", $2/$1 }' "$tmp3_logfile" > "$tmp4_logfile"
 
     # extract file names
     awk -F"," 'BEGIN { OFS = "," } {print $1}' "$logfile3" > "$tmp5_logfile"
