@@ -7,10 +7,13 @@ DOCKER_BUILD_FLAGS=--build-arg CACHE_DATE=$(DATE) --build-arg EXPR_DIR=$(CONTAIN
 
 all: build run
 
-.PHONY: all build run docker-clean attach setup_dir
+.PHONY: all build build-no-cache run docker-clean attach setup_dir
 
 build:
 	time docker build $(DOCKER_BUILD_FLAGS) -t $(IMAGE_NAME) . 2>&1 | tee $<.log
+
+build-no-cache:
+	time docker build --no-cache $(DOCKER_BUILD_FLAGS) -t $(IMAGE_NAME) . 2>&1 | tee $<.log
 
 # --userns=host is needed because of https://docs.docker.com/engine/security/userns-remap/
 # beware that the files created on the host volume will be owned by root
@@ -21,7 +24,6 @@ run:
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME)
 
 setup_dir:
-	-rm -rf $(HOST_EXPERIMENT_DIR)/*
 	cp -r ./* $(HOST_EXPERIMENT_DIR)
 
 attach:
