@@ -9,9 +9,9 @@
 function main()
 {
     declare -r TEST_DIR=".."
-    declare -r LIB_DIR="$TEST_DIR/lib"
+    declare -r LIB_DIR="lib"
     declare -r LB_DIR="$TEST_DIR/lattice_bins"
-    declare -r EXP_DIR="$LB_DIR/temp"
+    declare -r EXP_DIR="$LB_DIR/${BENCHMARK_DIR}"
     declare -r DATA_DIR="$EXP_DIR/data"
     declare -r OUT_DIR="$EXP_DIR/output"
     declare -r SRC_DIR="$EXP_DIR/src/partial"
@@ -27,12 +27,12 @@ function main()
     local baseline_system=get_dyn_grift_17_runtime
     # local baseline_system=get_racket_runtime
 
-    run_double 19 17
+    # run_double 19 17
     run_double 17 7
-    run_double 17 13
-    run_double 17 8
+    # run_double 17 13
+    # run_double 17 8
     
-    run_single $baseline_system 19
+    # run_single $baseline_system 19
     run_single $baseline_system 17
     run_single $baseline_system 7
 }
