@@ -406,13 +406,12 @@ function plot_two_configs_fine_benchmark()
             `"${dyn_mean} lw 2 lt 1 lc \"red\" title 'Dynamic Grift';"
     fi
 
-    # cumulative performance figures
+    # cumulative performance figures NO TITLE
         gnuplot -e "set datafile separator \",\"; set terminal pngcairo "`
                 `"enhanced color font 'Verdana,10' size 1000,400;"`
                 `"set output '${cumulative_performance_fig}';"`
                 `"set border 15 back;"`
-                `"set key opaque bottom right;"`
-                `"set title \"${printname}\";"`
+                `"unset key;"`
                 `"stats '${config2_log_sorted}' using 4 nooutput;"`
                 `"set yrange [1:STATS_records];"`
 	        `"max(x,y) = (x > y) ? x : y;"`
