@@ -111,6 +111,8 @@ function plot_two_configs_and_racket_coarse_benchmark()
     dyn_mean=$(cat "${TMP_DIR}/dyn/${name}${disk_aux_name}${dyn_config}.runtime")
     static_mean=$(cat "${TMP_DIR}/static/${name}/single/${name}${disk_aux_name}.static.runtime")
 
+    racket_mean=$(cat "${RKT_TMP_DIR}/racket/${name}${disk_aux_name}.runtime")
+
     # longest proxy chain figure
     gnuplot -e "set datafile separator \",\";"`
             `"set terminal pngcairo size 1280,960"`
