@@ -22,7 +22,7 @@ function main()
         exit 1
     fi
 
-    . ${TEST_DIR}/lib/runtime.sh
+    . lib/runtime.sh
 
     local baseline_system=get_dyn_grift_17_runtime
     # local baseline_system=get_racket_runtime
