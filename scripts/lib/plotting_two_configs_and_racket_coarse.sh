@@ -52,6 +52,7 @@ function plot_two_configs_and_racket_coarse_benchmark()
     mkdir -p "$all_dir"
     mkdir -p "$cumulative_performance_dir"
 
+    local legend_fig="${plot_dir}/legend.png"
     local runtime_fig="${runtimes_dir}/${name}.png"
     local casts_count_fig="${casts_dir}/${name}.png"
     local runtime_and_casts_count_fig="${runtime_and_casts_count_dir}/${name}.png"
@@ -324,4 +325,13 @@ function plot_two_configs_and_racket_coarse_benchmark()
                 `"plot '${config1_log_sorted}' using (\$3/${racket_mean}):(1.) lc rgb '$color1' lw 3 title '${c1t}' smooth cumulative,"`
                 `"     '${config2_log_sorted}' using (\$3/${racket_mean}):(1.) lc rgb '$color2' lw 3 title '${c2t}' smooth cumulative,"`
 		`"     '${racket_log}' using 3:(1.) lc rgb '$color3' lw 3 title 'Typed Racket' smooth cumulative"
+
+	gnuplot -e "set datafile separator \",\"; set terminal pngcairo "`
+                `"enhanced color font 'Verdana,20' size 800,150;"`
+                `"set output '${legend_fig}';"`
+                `"unset border; unset tics;"`
+                `"set key horizontal;"`
+                `"plot [0:1] [0:1] NaN lc rgb '$color1' lw 3 title '${c1t}',"`
+                `"     NaN lc rgb '$color2' lw 3 title '${c2t}',"`
+		`"     NaN lc rgb '$color3' lw 3 title 'Typed Racket'"
 }

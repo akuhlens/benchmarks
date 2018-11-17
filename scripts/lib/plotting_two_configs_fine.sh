@@ -408,7 +408,7 @@ function plot_two_configs_fine_benchmark()
 
     # cumulative performance figures NO TITLE
         gnuplot -e "set datafile separator \",\"; set terminal pngcairo "`
-                `"enhanced color font 'Verdana,10' size 1000,400;"`
+                `"enhanced color font 'Verdana,20' size 1000,400;"`
                 `"set output '${cumulative_performance_fig}';"`
                 `"set border 15 back;"`
                 `"unset key;"`
