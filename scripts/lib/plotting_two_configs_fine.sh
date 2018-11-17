@@ -412,15 +412,18 @@ function plot_two_configs_fine_benchmark()
                 `"set output '${cumulative_performance_fig}';"`
                 `"set border 15 back;"`
                 `"unset key;"`
-                `"stats '${config2_log_sorted}' using 4 nooutput;"`
-                `"set yrange [1:STATS_records];"`
-	        `"max(x,y) = (x > y) ? x : y;"`
-                `"set xrange [0:max(STATS_max, 20)];"`
-                `"set ytics (1, STATS_records/2, STATS_records);"`
-		`"set logscale x;"`
 		`"round(x) = x - floor(x) < 0.5 ? floor(x) : ceil(x);"`
 		`"round2(x, n) = round(x*10**n)*10.0**(-n);"`
-                `"set xtics nomirror (1, 2, max(round2(STATS_max, 2), 20));"`
+	        `"max(x,y) = (x > y) ? x : y;"`
+                `"stats '${config2_log_sorted}' using 4 nooutput;"`
+		`"type_based_max_slowdown = round2(STATS_max, 2);"`
+		`"added = STATS_records*5/100;"`
+                `"set yrange [1:STATS_records+added];"`
+		`"range_max = max(20, type_based_max_slowdown);"`
+                `"set xrange [0:range_max];"`
+                `"set xtics nomirror (1, 2, range_max);"`
+                `"set ytics (1, STATS_records/2, STATS_records);"`
+		`"set logscale x;"`
                 `"set arrow from 1,graph(0,0) to 1,graph(1,1) nohead lc rgb \"black\" lw 2;"`
                 `"set arrow from 2,graph(0,0) to 2,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
                 `"set arrow from 3,graph(0,0) to 3,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
@@ -431,6 +434,6 @@ function plot_two_configs_fine_benchmark()
                 `"set arrow from 8,graph(0,0) to 8,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
                 `"set arrow from 9,graph(0,0) to 9,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
                 `"set arrow from 10,graph(0,0) to 10,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
-                `"plot '${config1_log_sorted}' using 4:(1.) lc rgb '$color1' title '${c1t}' smooth cumulative,"`
-                `"     '${config2_log_sorted}' using 4:(1.) lc rgb '$color2' title '${c2t}' smooth cumulative"
+                `"plot '${config1_log_sorted}' using 4:(1.) lc rgb '$color1' lw 3 title '${c1t}' smooth cumulative,"`
+                `"     '${config2_log_sorted}' using 4:(1.) lc rgb '$color2' lw 3 title '${c2t}' smooth cumulative"
 }
