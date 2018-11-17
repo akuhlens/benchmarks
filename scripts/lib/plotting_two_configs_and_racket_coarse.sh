@@ -295,8 +295,8 @@ function plot_two_configs_and_racket_coarse_benchmark()
                 `"enhanced color font 'Verdana,20' size 1000,400;"`
                 `"set output '${cumulative_performance_fig}';"`
                 `"set border 15 back;"`
-                `"set key samplen 2 font \",15\" top left;"`
-                `"set title \"${printname}\";"`
+                `"unset key;"`
+                `"set ylabel \"${printname}\";"`
 		`"round(x) = x - floor(x) < 0.5 ? floor(x) : ceil(x);"`
 		`"round2(x, n) = round(x*10**n)*10.0**(-n);"`
                 `"stats '${config2_log_sorted}' using 4 nooutput;"`
@@ -321,7 +321,7 @@ function plot_two_configs_and_racket_coarse_benchmark()
                 `"set arrow from 8,graph(0,0) to 8,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
                 `"set arrow from 9,graph(0,0) to 9,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
                 `"set arrow from 10,graph(0,0) to 10,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
-                `"plot '${config1_log_sorted}' using 4:(1.) lc rgb '$color1' lw 3 title '${c1t}' smooth cumulative,"`
-                `"     '${config2_log_sorted}' using 4:(1.) lc rgb '$color2' lw 3 title '${c2t}' smooth cumulative,"`
+                `"plot '${config1_log_sorted}' using (\$3/${racket_mean}):(1.) lc rgb '$color1' lw 3 title '${c1t}' smooth cumulative,"`
+                `"     '${config2_log_sorted}' using (\$3/${racket_mean}):(1.) lc rgb '$color2' lw 3 title '${c2t}' smooth cumulative,"`
 		`"     '${racket_log}' using 3:(1.) lc rgb '$color3' lw 3 title 'Typed Racket' smooth cumulative"
 }
