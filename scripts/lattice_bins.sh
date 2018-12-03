@@ -148,9 +148,8 @@ gen_output()
 # $5  - second config index
 # $6  - benchmark filename without extension
 # $7  - space-separated benchmark arguments
-# $8  - nsamples
-# $9  - nbins
-# $10 - aux name
+# $8  - nbins
+# $9 - aux name
 run_benchmark()
 {
     local baseline_system="$1"; shift
@@ -160,7 +159,6 @@ run_benchmark()
     local config2_index="$1";   shift
     local benchmark_name="$1";  shift
     local input_filename="$1";  shift
-    local nsamples="$1";        shift
     local nbins="$1";           shift
     local aux_name="$1";        shift
 
@@ -206,7 +204,7 @@ run_benchmark()
 	    rm -f "${samples_directory_path}.grift"
             cp "$static_source_path" "${samples_directory_path}.grift"
             dynamizer_out=$(dynamizer "${samples_directory_path}.grift" --fine\
-                                      --samples "$nsamples" --bins "$nbins" | \
+				      --bins "$nbins" | \
                                 sed -n 's/.* \([0-9]\+\) .* \([0-9]\+\) .*/\1 \2/p')
 
 	    # check for/create/annotate 100% and 0%
@@ -250,24 +248,21 @@ run_benchmark()
 # $3 - dynamically typed system
 # $4 - first config index
 # $5 - second config index
-# $6 - nsamples
-# $7 - nbins
+# $6 - nbins
 run_experiment()
 {
     local baseline_system="$1"; shift
     local static_system="$1";   shift
     local dynamic_system="$1";  shift
-    local config1_index="$1";              shift
-    local config2_index="$1";              shift
-    local nsamples="$1";        shift
+    local config1_index="$1";   shift
+    local config2_index="$1";   shift
     local nbins="$1";           shift
 
     local g=()
 
     for ((i=0;i<${#BENCHMARKS[@]};++i)); do
         run_benchmark $baseline_system $static_system $dynamic_system $config1_index $config2_index\
-                      "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_LATTICE[i]}"\
-                      "$nsamples" "$nbins" ""
+                      "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_LATTICE[i]}" "$nbins" ""
         g+=($RETURN)
     done
 
@@ -281,7 +276,7 @@ run_experiment()
 
 main()
 {
-    USAGE="Usage: $0 root loops [fresh|date] cast_profiler? [fine|coarse] nsamples nbins n_1,n_2 ... n_n"
+    USAGE="Usage: $0 root loops [fresh|date] cast_profiler? [fine|coarse] nbins n_1,n_2 ... n_n"
     if [ "$#" == "0" ]; then
         echo "$USAGE"
         exit 1
@@ -291,7 +286,6 @@ main()
     local date="$1";     shift
     CAST_PROFILER="$1";  shift
     local LEVEL="$1";    shift
-    local nsamples="$1"; shift
     local nbins="$1";    shift
 
     declare -r LB_DIR="${ROOT_DIR}/lattice_bins"
@@ -376,7 +370,6 @@ main()
         chezscheme_ver=$(chez-scheme --version 2>&1)
         printf "ChezScheme ver.\t:%s\n" "$chezscheme_ver" >> "$PARAMS_LOG"
         printf "loops:\t\t:%s\n" "$LOOPS" >> "$PARAMS_LOG"
-        printf "nsamples\t:%s\n" "$nsamples" >> "$PARAMS_LOG"
         printf "nbins\t:%s\n" "$nbins" >> "$PARAMS_LOG"
     fi
 
@@ -387,7 +380,7 @@ main()
             for j in `seq ${i} ${config}`; do
                 if [ ! $i -eq $j ]; then
                     run_experiment $baseline_system $static_system \
-                                   $dynamic_system $i $j $nsamples $nbins
+                                   $dynamic_system $i $j $nbins
                 fi
             done
         done
@@ -396,7 +389,7 @@ main()
             i=$1; shift
             j=$1; shift
             run_experiment $baseline_system $static_system $dynamic_system $i\
-                           $j $nsamples $nbins
+                           $j $nbins
         done
     fi
 
