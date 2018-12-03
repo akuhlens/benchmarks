@@ -1,4 +1,3 @@
-BIN_SAMPLES ?= 30
 NUM_BINS ?= 30
 TIMING_SAMPLES ?= 5
 ROOT_DIR ?=/app/experiments
@@ -23,12 +22,12 @@ external:
 
 fine:
 	./lattice_bins.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true fine \
-		$(BIN_SAMPLES) $(NUM_BINS) $(CONFIGS)
+		$(NUM_BINS) $(CONFIGS)
 
 coarse:
 	./coarse_racket.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR)
-	# ./lattice_bins.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
-	# 	$(BIN_SAMPLES) $(NUM_BINS) $(CONFIGS)
+	./lattice_bins.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
+		$(NUM_BINS) $(CONFIGS)
 
 test:
 	TIMING_SAMPLES=1 BIN_SAMPLES=1 NUM_BINS=20 BENCHMARK_DIR=$(TEST_DIR) ROOT_DIR=".." \
