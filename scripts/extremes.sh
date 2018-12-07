@@ -168,8 +168,17 @@ run_experiment()
     local logfile1="${DATA_DIR}/static.log"
     local logfile2="${DATA_DIR}/dyn.log"
     local logfile3="${DATA_DIR}/partial.log"
-
+    
+    local configs=( $CONFIGS )
+    local configs_len=${#configs[@]}
+    
+    if [ $configs_len -eq 1 ] 
+    then
+    local config_str="Grift"
+    else
     local config_str=$(grift-configs --name-end " Grift" --names $CONFIGS)
+    fi    
+    
     local shared_str=$(grift-configs --name-sep "_" --common $CONFIGS)
     
     echo "name,${config_str},Typed-Racket,OCaml" > "$logfile1"
@@ -187,7 +196,7 @@ run_experiment()
     echo "$gmlog2" > $logfile2
 
     gen_fig static "Static Grift" "${shared_str}_static" "right" "" ""
-    gen_fig dyn Racket "${shared_str}_dynamic" "right" "0.02" "11"
+    gen_fig dyn Racket "${shared_str}_dynamic" "right" "" ""
 }
 
 main()
