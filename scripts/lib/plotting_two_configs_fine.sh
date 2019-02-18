@@ -406,23 +406,24 @@ function plot_two_configs_fine_benchmark()
             `"${dyn_mean} lw 2 lt 1 lc \"red\" title 'Dynamic Grift';"
     fi
 
-    # cumulative performance figures
+    # cumulative performance figures NO TITLE
         gnuplot -e "set datafile separator \",\"; set terminal pngcairo "`
                 `"enhanced color font 'Verdana,20' size 1000,400;"`
                 `"set output '${cumulative_performance_fig}';"`
                 `"set border 15 back;"`
-                `"set key samplen 2 font \",15\" top left;"`
-                `"set title \"${printname}\";"`
-                `"stats '${config2_log_sorted}' using 4 nooutput;"`
-		`"added = STATS_records*5/100;"`
-                `"set yrange [1:STATS_records+added];"`
-	        `"max(x,y) = (x > y) ? x : y;"`
-                `"set xrange [0:max(STATS_max, 20)];"`
-                `"set ytics (1, STATS_records/2, STATS_records);"`
-		`"set logscale x;"`
+                `"unset key;"`
 		`"round(x) = x - floor(x) < 0.5 ? floor(x) : ceil(x);"`
 		`"round2(x, n) = round(x*10**n)*10.0**(-n);"`
-                `"set xtics nomirror (1, 2, max(round2(STATS_max, 2), 20));"`
+	        `"max(x,y) = (x > y) ? x : y;"`
+                `"stats '${config2_log_sorted}' using 4 nooutput;"`
+		`"type_based_max_slowdown = round2(STATS_max, 2);"`
+		`"added = STATS_records*5/100;"`
+                `"set yrange [1:STATS_records+added];"`
+		`"range_max = max(20, type_based_max_slowdown);"`
+                `"set xrange [0:range_max];"`
+                `"set xtics nomirror (1, 2, range_max);"`
+                `"set ytics (1, STATS_records/2, STATS_records);"`
+		`"set logscale x;"`
                 `"set arrow from 1,graph(0,0) to 1,graph(1,1) nohead lc rgb \"black\" lw 2;"`
                 `"set arrow from 2,graph(0,0) to 2,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`
                 `"set arrow from 3,graph(0,0) to 3,graph(1,1) nohead dt \".\" lc rgb \"black\" lw 1;"`

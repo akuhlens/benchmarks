@@ -281,12 +281,13 @@ main()
         echo "$USAGE"
         exit 1
     fi
-    ROOT_DIR="$1";       shift
-    LOOPS="$1";          shift
-    local date="$1";     shift
-    CAST_PROFILER="$1";  shift
-    local LEVEL="$1";    shift
-    local nbins="$1";    shift
+
+    ROOT_DIR="$1";      shift
+    LOOPS="$1";         shift
+    local date="$1";    shift
+    CAST_PROFILER="$1"; shift
+    local LEVEL="$1";   shift
+    local nbins="$1";   shift
 
     declare -r LB_DIR="${ROOT_DIR}/lattice_bins"
     if [ "$date" == "fresh" ]; then
