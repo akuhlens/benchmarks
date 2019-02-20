@@ -35,7 +35,9 @@ attach:
 		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME) /bin/bash
 
-debug: build setup_dir typed_racket_benchmarks/.git attach
+debug_bench : build-no-cache typed_racket_benchmarks/.git setup_dir attach
+
+debug: build typed_racket_benchmarks/.git setup_dir attach
 
 docker-clean:
 	@echo "Remove all non running containers"
