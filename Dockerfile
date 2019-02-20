@@ -48,7 +48,7 @@ ARG CACHE_DATE=not_a_date
 RUN raco pkg install --no-setup \
     --clone Grift https://github.com/Gradual-Typing/Grift.git 
 WORKDIR /app/Grift
-RUN git checkout port-from-tr-with-types
+RUN git checkout port-from-tr
 RUN raco setup grift
 WORKDIR /app
 ENV PATH="/root/.racket/7.2/bin/:$PATH"
