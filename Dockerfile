@@ -48,10 +48,10 @@ ARG CACHE_DATE=not_a_date
 RUN raco pkg install --no-setup \
     --clone Grift https://github.com/Gradual-Typing/Grift.git 
 WORKDIR /app/Grift
-RUN git checkout rectypes
+RUN git checkout port-from-tr
 RUN raco setup grift
 WORKDIR /app
-ENV PATH="/root/.racket/7.0/bin/:$PATH"
+ENV PATH="/root/.racket/7.2/bin/:$PATH"
 
 # installing the Dynamizer
 RUN git clone https://github.com/Gradual-Typing/Dynamizer.git \
