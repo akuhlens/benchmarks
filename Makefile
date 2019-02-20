@@ -24,6 +24,7 @@ run:
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME)
 
 setup_dir:
+	@ mkdir -p $(HOST_EXPERIMENT_DIR)
 	cp -r ./* $(HOST_EXPERIMENT_DIR)
 
 attach:
