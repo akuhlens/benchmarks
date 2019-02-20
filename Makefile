@@ -27,12 +27,15 @@ setup_dir:
 	@ mkdir -p $(HOST_EXPERIMENT_DIR)
 	cp -r ./* $(HOST_EXPERIMENT_DIR)
 
+typed_racket_benchmarks/.git:
+	git submodule update --init typed_racket_benchmarks
+
 attach:
 	docker run --rm -it --userns=host \
 		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME) /bin/bash
 
-debug: build setup_dir attach
+debug: build setup_dir typed_racket_benchmarks/.git attach
 
 docker-clean:
 	@echo "Remove all non running containers"
