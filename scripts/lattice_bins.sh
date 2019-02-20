@@ -4,9 +4,6 @@ set -euo pipefail
 declare -r PRECISION=5
 TIMEFORMAT=%R
 
-# needed for the fft benchmarks
-ulimit -s unlimited
-
 # needed so that anyone can access the files
 umask 000
 

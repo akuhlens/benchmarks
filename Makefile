@@ -25,6 +25,7 @@ run:
 	cp -r ./* $(HOST_EXPERIMENT_DIR)
 	docker run --userns=host \
 		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
+		--ulimit stack=unlimited \
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME)
 
 setup_dir:
@@ -34,9 +35,13 @@ setup_dir:
 typed_racket_benchmarks/.git:
 	git submodule update --init typed_racket_benchmarks
 
+# needed for the fft benchmarks
+# ulimit -s unlimited
+
 attach:
 	docker run --rm -it --userns=host \
 		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
+		--ulimit stack=unlimited \
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME) /bin/bash
 
 debug: build typed_racket_benchmarks/.git setup_dir attach
