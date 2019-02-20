@@ -6,7 +6,7 @@ RUN pacman --quiet --noconfirm -S base-devel git sudo time wget nano
 WORKDIR /app
 
 # installing Racket and Typed Racket
-RUN pacman --quiet --noconfirm -S racket racket-docs
+RUN pacman --quiet --noconfirm -S racket
 
 # installing Gambit-C compiler for Scheme
 RUN pacman --quiet --noconfirm -S gambit-c
