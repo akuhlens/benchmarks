@@ -20,9 +20,31 @@ function plot_two_configs_and_racket_coarse()
     local c2t=$(echo $config_str | sed -n 's/.*,\(.*\),.*/\1/p;q')
     local ct=$(echo $config_str | sed -n 's/.*,.*,\(.*\)/\1/p;q')
 
+    PLOT_DIR="${OUT_DIR}/${ct}"
+    RUNTIMES_DIR="${PLOT_DIR}/runtimes"
+    CASTS_DIR="${PLOT_DIR}/casts"
+    RUNTIME_AND_CASTS_COUNT_DIR="${PLOT_DIR}/runtime_and_casts_count"
+    LONGEST_PROXY_CHAINS_DIR="${PLOT_DIR}/longest_proxy_chains"
+    RUNTIME_AND_LONGEST_PROXY_CHAIN_DIR="${PLOT_DIR}/runtime_and_longest_proxy_chain"
+    ALL_DIR="${PLOT_DIR}/all"
+    CUMULATIVE_PERFORMANCE_DIR="${PLOT_DIR}/cum_perf"
+
+    mkdir -p "$RUNTIMES_DIR"
+    mkdir -p "$CASTS_DIR"
+    mkdir -p "$RUNTIME_AND_CASTS_COUNT_DIR"
+    mkdir -p "$LONGEST_PROXY_CHAINS_DIR"
+    mkdir -p "$RUNTIME_AND_LONGEST_PROXY_CHAIN_DIR"
+    mkdir -p "$ALL_DIR"
+    mkdir -p "$CUMULATIVE_PERFORMANCE_DIR"
+
+    local legend_fig="${PLOT_DIR}/legend.png"
+
     for benchmark in "${BENCHMARKS[@]}"; do
-	plot_two_configs_and_racket_coarse_benchmark "$benchmark" $c1 $c2 "$c1t" "$c2t" "$ct" $dyn_config
+	plot_two_configs_and_racket_coarse_benchmark "$benchmark" $c1 $c2 "$c1t" "$c2t" $dyn_config
     done
+
+    cd "$CUMULATIVE_PERFORMANCE_DIR"
+    convert -append quicksort.png sieve.png ray.png blackscholes.png n-body.png fft.png matmult.png "$legend_fig"  "${ROOT_DIR}/Fig7_LHS.png"
 }
 
 function plot_two_configs_and_racket_coarse_benchmark()
@@ -32,34 +54,15 @@ function plot_two_configs_and_racket_coarse_benchmark()
     local c2="$1";         shift
     local c1t="$1";        shift
     local c2t="$1";        shift
-    local ct="$1";         shift
     local dyn_config="$1"; shift
 
-    local plot_dir="${OUT_DIR}/${ct}"
-    local runtimes_dir="${plot_dir}/runtimes"
-    local casts_dir="${plot_dir}/casts"
-    local runtime_and_casts_count_dir="${plot_dir}/runtime_and_casts_count"
-    local longest_proxy_chains_dir="${plot_dir}/longest_proxy_chains"
-    local runtime_and_longest_proxy_chain_dir="${plot_dir}/runtime_and_longest_proxy_chain"
-    local all_dir="${plot_dir}/all"
-    local cumulative_performance_dir="${plot_dir}/cum_perf"
-
-    mkdir -p "$runtimes_dir"
-    mkdir -p "$casts_dir"
-    mkdir -p "$runtime_and_casts_count_dir"
-    mkdir -p "$longest_proxy_chains_dir"
-    mkdir -p "$runtime_and_longest_proxy_chain_dir"
-    mkdir -p "$all_dir"
-    mkdir -p "$cumulative_performance_dir"
-
-    local legend_fig="${plot_dir}/legend.png"
-    local runtime_fig="${runtimes_dir}/${name}.png"
-    local casts_count_fig="${casts_dir}/${name}.png"
-    local runtime_and_casts_count_fig="${runtime_and_casts_count_dir}/${name}.png"
-    local longest_proxy_chain_fig="${longest_proxy_chains_dir}/${name}.png"
-    local runtime_and_longest_proxy_chain_fig="${runtime_and_longest_proxy_chain_dir}/${name}.png"
-    local all_fig="${all_dir}/${name}.png"
-    local cumulative_performance_fig="${cumulative_performance_dir}/${name}.png"
+    local runtime_fig="${RUNTIMES_DIR}/${name}.png"
+    local casts_count_fig="${CASTS_DIR}/${name}.png"
+    local runtime_and_casts_count_fig="${RUNTIME_AND_CASTS_COUNT_DIR}/${name}.png"
+    local longest_proxy_chain_fig="${LONGEST_PROXY_CHAINS_DIR}/${name}.png"
+    local runtime_and_longest_proxy_chain_fig="${RUNTIME_AND_LONGEST_PROXY_CHAIN_DIR}/${name}.png"
+    local all_fig="${ALL_DIR}/${name}.png"
+    local cumulative_performance_fig="${CUMULATIVE_PERFORMANCE_DIR}/${name}.png"
 
     local config1_log="${DATA_DIR}/${name}${c1}.log"
     local config2_log="${DATA_DIR}/${name}${c2}.log"

@@ -69,4 +69,7 @@ ARG EXPR_DIR=not_a_path
 
 WORKDIR $EXPR_DIR/scripts
 
+# to create figures of multiple plots
+RUN pacman --quiet --noconfirm -S imagemagick
+
 CMD make test
