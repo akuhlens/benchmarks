@@ -164,7 +164,7 @@ main()
     LOOPS="$1";          shift
     local date="$1";     shift
 
-    declare -r LB_DIR="${ROOT_DIR}/results/typed_racket/coarse"
+    declare -r LB_DIR="${ROOT_DIR}/results/typed_racket/partial/coarse"
     if [ "$date" == "fresh" ]; then
         declare -r DATE=`date +%Y_%m_%d_%H_%M_%S`
         mkdir -p "$LB_DIR/$DATE"
