@@ -10,7 +10,8 @@ WORKDIR /app
 
 RUN wget https://mirror.racket-lang.org/installers/7.0/racket-7.0-x86_64-linux.sh \
     && chmod a+x racket-7.0-x86_64-linux.sh \
-    && ./racket-7.0-x86_64-linux.sh --unix-style --dest /usr/local
+    && ./racket-7.0-x86_64-linux.sh --in-place --dest /root/racket
+ENV PATH="/root/racket/bin:$PATH"
 
 # installing Gambit-C compiler for Scheme
 RUN pacman --quiet --noconfirm -S gambit-c
