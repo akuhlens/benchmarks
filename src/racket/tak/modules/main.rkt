@@ -8,12 +8,7 @@
 ;;; racket/fixnum safe operations are generally no faster than using
 ;;; generic primitives like +. (According to the documentation)
 
-(define (tak x y z)
-  (if (>= y x)
-      z
-      (tak (tak (- x 1) y z)
-           (tak (- y 1) z x)
-           (tak (- z 1) x y))))
+(require "tak.rkt")
 
 (define (run-benchmark)
   (let* ([x (read)]

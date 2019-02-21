@@ -2,6 +2,12 @@
 
 (require racket/pretty)
 
+(require require-typed-check)
+
+(require/typed/check "helpers.rkt"
+                     [create-x (Integer -> (Vectorof Integer))]
+                     [create-y ((Vectorof Integer) -> (Vectorof Integer))])
+
 ;;; ARRAY1 -- One of the Kernighan and Van Wyk benchmarks.
 ;;; 9/27/2017 added types to support typed-racket by Andre Kuhlenschmidt
 ;;; 10/9/2017 changed to use internal timing (Andre)
@@ -13,23 +19,6 @@
 ;;; racket/fixnum safe operations are generally no faster than using
 ;;; generic primitives like +. (According to the documentation)
 
-
-(: create-x : Integer -> (Vectorof Integer))
-(define (create-x n)
-  (define result : (Vectorof Integer) (make-vector n))
-  (do : (Vectorof Integer)
-    ((i : Integer 0 (+ i 1)))
-    ((>= i n) result)
-    (vector-set! result i i)))
-
-(: create-y : (Vectorof Integer) -> (Vectorof Integer))
-(define (create-y x)
-  (let* ((n : Integer (vector-length x))
-         (result : (Vectorof Integer) (make-vector n)))
-    (do : (Vectorof Integer)
-      ((i : Integer (- n 1) (- i 1)))
-      ((< i 0) result)
-      (vector-set! result i (vector-ref x i)))))
 
 (: my-try : Integer -> Integer)
 (define (my-try n)

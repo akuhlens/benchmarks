@@ -10,15 +10,10 @@
 ;;; 10/9/2017 - added internal timing to midigate cost of startup
 
 (require racket/pretty)
-;;; TAK -- A vanilla version of the TAKeuchi function.
 
-(: tak : Integer Integer Integer -> Integer)
-(define (tak x y z)
-  (if (>= y x)
-      z
-      (tak (tak (- x 1) y z)
-           (tak (- y 1) z x)
-           (tak (- z 1) x y))))
+(require require-typed-check)
+
+(require/typed/check "tak.rkt" [mult (Integer Integer Integer -> Integer)])
 
 (define (main)
   (let* ([x : Any (read)]
