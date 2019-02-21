@@ -69,4 +69,4 @@ ARG EXPR_DIR=not_a_path
 
 WORKDIR $EXPR_DIR/scripts
 
-CMD make all
+CMD make test

@@ -9,7 +9,7 @@ IDEAL_CONFIGS ?=17
 CONFIGS ?=17 7
 DYNAMIC_GRIFT_CONFIG ?=17
 
-.PHONY: external fine coarse all plot clean test-clean outputs
+.PHONY: external fine coarse release plot clean test-clean outputs
 
 release: coarse plot_coarse fine plot_fine external
 
@@ -34,9 +34,9 @@ coarse:
 test:
 	INPUT_TYPE=test TIMING_SAMPLES=1 BIN_SAMPLES=1 NUM_BINS=2 \
 	BENCHMARK_DIR=$(TEST_DIR) ROOT_DIR=".." \
-		$(MAKE) all
+		$(MAKE) release
 
-release-fast: INPUT_TYPE=test TIMING_SAMPLES=1 $(MAKE) all
+release-fast: INPUT_TYPE=test TIMING_SAMPLES=1 $(MAKE) release
 
 clean:
 	find extremes results -executable -and \( -not -type d \) -delete
