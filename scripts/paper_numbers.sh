@@ -2,7 +2,7 @@
 
 # computes speedup ranges for different configurations in the internal
 # comparisons it expects the same directory structure as the one for
-# lattice_bins where the main directory is named temp and it needs temp/data,
+# partial where the main directory is named temp and it needs temp/data,
 # temp/tmp/dyn, temp/tmp/static, and maybe temp/tmp/racket if you assume racket
 # as the baseline
 
@@ -10,7 +10,7 @@ function main()
 {
     declare -r TEST_DIR=".."
     declare -r LIB_DIR="lib"
-    declare -r LB_DIR="$TEST_DIR/lattice_bins"
+    declare -r LB_DIR="$TEST_DIR/partial"
     declare -r EXP_DIR="$LB_DIR/${BENCHMARK_DIR}"
     declare -r DATA_DIR="$EXP_DIR/data"
     declare -r OUT_DIR="$EXP_DIR/output"

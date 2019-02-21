@@ -161,7 +161,7 @@ run_benchmark()
 
     local samples_directory_path="${TMP_DIR}/partial/${benchmark_name}"
     local static_source_path="${TMP_DIR}/static/${benchmark_name}.grift"
-    if [ "$LEVEL" = "fine" ]; then
+    if [ "$MODE" = "fine" ]; then
 	static_source_path="${TMP_DIR}/static/${benchmark_name}/single/${benchmark_name}.grift"
     else
 	static_source_path="${TMP_DIR}/static/${benchmark_name}/modules"
@@ -197,7 +197,7 @@ run_benchmark()
         rm -rf "$samples_directory_path"
 
         dynamizer_out=""
-        if [ "$LEVEL" = "fine" ]; then
+        if [ "$MODE" = "fine" ]; then
 	    rm -f "${samples_directory_path}.grift"
             cp "$static_source_path" "${samples_directory_path}.grift"
             dynamizer_out=$(dynamizer "${samples_directory_path}.grift" --fine\
@@ -283,10 +283,10 @@ main()
     LOOPS="$1";         shift
     local date="$1";    shift
     CAST_PROFILER="$1"; shift
-    local LEVEL="$1";   shift
+    local MODE="$1";   shift
     local nbins="$1";   shift
 
-    declare -r LB_DIR="${ROOT_DIR}/lattice_bins"
+    declare -r LB_DIR="${ROOT_DIR}/partial"
     if [ "$date" == "fresh" ]; then
         declare -r DATE=`date +%Y_%m_%d_%H_%M_%S`
         mkdir -p "$LB_DIR/$DATE"

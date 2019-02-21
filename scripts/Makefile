@@ -21,12 +21,12 @@ external:
 	./extremes.sh $(TIMING_SAMPLES) $(ROOT_DIR) $(BENCHMARK_DIR) $(IDEAL_CONFIGS)
 
 fine:
-	./lattice_bins.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true fine \
+	./partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true fine \
 		$(NUM_BINS) $(CONFIGS)
 
 coarse:
 	./coarse_racket.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR)
-	./lattice_bins.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
+	./partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
 		$(NUM_BINS) $(CONFIGS)
 
 test:
@@ -34,12 +34,12 @@ test:
 		$(MAKE) all
 
 clean:
-	find extremes lattice_bins -executable -and \( -not -type d \) -delete
-	find extremes lattice_bins -type d -and -name "compiled" -exec rm -r {} \;
+	find extremes partial -executable -and \( -not -type d \) -delete
+	find extremes partial -type d -and -name "compiled" -exec rm -r {} \;
 	$(MAKE) -C src clean
 
 test-clean:
-	rm -rf $(ROOT_DIR)/extremes/$(TEST_DIR) $(ROOT_DIR)/lattice_bins/$(TEST_DIR)
+	rm -rf $(ROOT_DIR)/extremes/$(TEST_DIR) $(ROOT_DIR)/partial/$(TEST_DIR)
 
 outputs:
 	$(MAKE) -C outputs

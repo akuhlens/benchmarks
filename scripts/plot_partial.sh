@@ -7,7 +7,7 @@ function main()
     dyn_config="$1"; shift
 
     declare -r LIB_DIR="${ROOT_DIR}/scripts/lib"
-    declare -r LB_DIR="${ROOT_DIR}/lattice_bins"
+    declare -r LB_DIR="${ROOT_DIR}/partial"
     declare -r RKT_DIR="${ROOT_DIR}/coarse_racket"
     echo "${LB_DIR}"
     if [ -z ${BENCHMARK_DIR+x} ]; then
