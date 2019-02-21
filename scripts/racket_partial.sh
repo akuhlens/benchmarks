@@ -142,9 +142,15 @@ run_experiment()
     local static_system="$1";   shift
     local dynamic_system="$1";  shift
 
-    for ((i=0;i<${#BENCHMARKS[@]};++i)); do
-        run_benchmark $baseline_system $static_system $dynamic_system "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_PARTIAL[i]}"  ""
-    done
+    if [ "$DATE" == "test" ]; then
+	for ((i=0;i<${#BENCHMARKS[@]};++i)); do
+            run_benchmark $baseline_system $static_system $dynamic_system "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_TRIVIAL[i]}"  ""
+	done
+    else
+	for ((i=0;i<${#BENCHMARKS[@]};++i)); do
+            run_benchmark $baseline_system $static_system $dynamic_system "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_PARTIAL[i]}"  ""
+	done
+    fi
 }
 
 main()
@@ -158,7 +164,7 @@ main()
     LOOPS="$1";          shift
     local date="$1";     shift
 
-    declare -r LB_DIR="${ROOT_DIR}/coarse_racket"
+    declare -r LB_DIR="${ROOT_DIR}/results/typed_racket/coarse"
     if [ "$date" == "fresh" ]; then
         declare -r DATE=`date +%Y_%m_%d_%H_%M_%S`
         mkdir -p "$LB_DIR/$DATE"

@@ -10,7 +10,7 @@ function main()
 {
     declare -r TEST_DIR=".."
     declare -r LIB_DIR="lib"
-    declare -r LB_DIR="$TEST_DIR/partial/fine"
+    declare -r LB_DIR="$TEST_DIR/results/grift/partial/fine"
     declare -r EXP_DIR="$LB_DIR/${BENCHMARK_DIR}"
     declare -r DATA_DIR="$EXP_DIR/data"
     declare -r OUT_DIR="$EXP_DIR/output"

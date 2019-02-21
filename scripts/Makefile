@@ -27,7 +27,6 @@ fine:
 
 coarse:
 	./coarse_racket.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR)
-	# BIN_SAMPLES and NUM_BINS are unused here
 	./partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
 		$(NUM_BINS) $(BIN_SAMPLES) $(CONFIGS)
 

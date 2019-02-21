@@ -261,11 +261,19 @@ run_experiment()
 
     local g=()
 
-    for ((i=0;i<${#BENCHMARKS[@]};++i)); do
-        run_benchmark $baseline_system $static_system $dynamic_system $config1_index $config2_index\
+    if [ "$DATE" == "test" ]; then
+	    for ((i=0;i<${#BENCHMARKS[@]};++i)); do
+		run_benchmark $baseline_system $static_system $dynamic_system $config1_index $config2_index\
+                      "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_TRIVIAL[i]}" ""
+		g+=($RETURN)
+	    done
+    else
+	    for ((i=0;i<${#BENCHMARKS[@]};++i)); do
+		run_benchmark $baseline_system $static_system $dynamic_system $config1_index $config2_index\
                       "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_PARTIAL[i]}" ""
-        g+=($RETURN)
-    done
+		g+=($RETURN)
+	    done
+    fi
 
     IFS=$'\n'
     max=$(echo "${g[*]}" | sort -nr | head -n1)
@@ -277,7 +285,7 @@ run_experiment()
 
 main()
 {
-    USAGE="Usage: $0 root loops [fresh|date] cast_profiler? [fine|coarse] BINS_N n_1,n_2 ... n_n"
+    USAGE="Usage: $0 root loops [fresh|date] cast_profiler? [fine|coarse] BINS_N SAMPLES_N n_1,n_2 ... n_n"
     if [ "$#" == "0" ]; then
         echo "$USAGE"
         exit 1
@@ -291,7 +299,7 @@ main()
     local BINS_N="$1";    shift
     local SAMPLES_N="$1"; shift
 
-    declare -r LB_DIR="${ROOT_DIR}/partial/${MODE}"
+    declare -r LB_DIR="${ROOT_DIR}/results/grift/partial/${MODE}"
     if [ "$date" == "fresh" ]; then
         declare -r DATE=`date +%Y_%m_%d_%H_%M_%S`
         mkdir -p "$LB_DIR/$DATE"
