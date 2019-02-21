@@ -13,7 +13,7 @@
 
 (require require-typed-check)
 
-(require/typed/check "tak.rkt" [mult (Integer Integer Integer -> Integer)])
+(require/typed/check "tak.rkt" [tak (Integer Integer Integer -> Integer)])
 
 (define (main)
   (let* ([x : Any (read)]
