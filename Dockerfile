@@ -57,6 +57,9 @@ RUN git clone https://github.com/Gradual-Typing/Dynamizer.git \
     && stack build && stack install \
     && cp /root/.local/bin/dynamizer /usr/local/bin
 
+# to create figures of multiple plots
+RUN pacman --quiet --noconfirm -S imagemagick
+
 # installing utilities for the experiments
 # sice machines run kernel 3.10 which causes problems with Qt5
 # see https://bbs.archlinux.org/viewtopic.php?pid=1755257#p1755257
@@ -69,9 +72,6 @@ Run wget http://downloads.sourceforge.net/sourceforge/gnuplot/gnuplot-5.2.0.tar.
     && ldconfig \
     && ./configure --disable-wxwidgets --with-qt=no --with-x --with-readline=gnu \
     && make -j 8 && make install
-
-# to create figures of multiple plots
-RUN pacman --quiet --noconfirm -S imagemagick
 
 ARG EXPR_DIR=not_a_path
 
