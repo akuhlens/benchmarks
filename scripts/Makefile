@@ -12,10 +12,10 @@ DYNAMIC_GRIFT_CONFIG ?=17
 all: coarse plot_coarse fine plot_fine external
 
 plot_coarse:
-	./plot_lattice.sh $(ROOT_DIR) coarse $(DYNAMIC_GRIFT_CONFIG) $(CONFIGS)
+	./plot_partial.sh $(ROOT_DIR) coarse $(DYNAMIC_GRIFT_CONFIG) $(CONFIGS)
 
 plot_fine:
-	./plot_lattice.sh $(ROOT_DIR) fine $(DYNAMIC_GRIFT_CONFIG) $(CONFIGS)
+	./plot_partial.sh $(ROOT_DIR) fine $(DYNAMIC_GRIFT_CONFIG) $(CONFIGS)
 
 external:
 	./extremes.sh $(TIMING_SAMPLES) $(ROOT_DIR) $(BENCHMARK_DIR) $(IDEAL_CONFIGS)
