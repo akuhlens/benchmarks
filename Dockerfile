@@ -33,7 +33,7 @@ USER root
 # sice machines run kernel 3.10 which causes problems with Qt5
 # see https://bbs.archlinux.org/viewtopic.php?pid=1755257#p1755257
 RUN pacman --quiet --noconfirm -S cairo pango \
-    && wget http://downloads.sourceforge.net/sourceforge/gnuplot/gnuplot-5.2.0.tar.gzc \
+    && wget http://downloads.sourceforge.net/sourceforge/gnuplot/gnuplot-5.2.0.tar.gz \
     && tar -zxvf gnuplot-5.2.0.tar.gz && cd gnuplot-5.2.0 \
     && ./configure --disable-wxwidgets --with-qt=no --with-x --with-readline=gnu \
     && make -j 8 && make install
