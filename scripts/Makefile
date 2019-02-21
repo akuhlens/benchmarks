@@ -1,4 +1,4 @@
-BIN_SAMPLES ?= 0
+BIN_SAMPLES ?= -1
 NUM_BINS ?= 30
 TIMING_SAMPLES ?= 10
 ROOT_DIR ?=/app/experiments

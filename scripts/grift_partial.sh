@@ -198,17 +198,11 @@ run_benchmark()
         if [ "$MODE" = "fine" ]; then
 	    rm -f "${samples_directory_path}.grift"
             cp "$static_source_path" "${samples_directory_path}.grift"
-	    if [[ "$SAMPLES_N" -eq "0" ]]; then
-		dynamizer_out=$(dynamizer "${samples_directory_path}.grift" \
-					  --fine --bins "$BINS_N" | \
-                                sed -n 's/.* \([0-9]\+\) .* \([0-9]\+\) .*/\1 \2/p')
-	    else
-		dynamizer_out=$(dynamizer "${samples_directory_path}.grift" \
-					  --fine\
-					  --configurations-count "$SAMPLES_N"\
-					  --bins "$BINS_N" | \
-                                sed -n 's/.* \([0-9]\+\) .* \([0-9]\+\) .*/\1 \2/p')
-	    fi
+	    dynamizer_out=$(dynamizer "${samples_directory_path}.grift" \
+				      --fine\
+				      --configurations-count "$SAMPLES_N"\
+				      --bins "$BINS_N" | \
+                            sed -n 's/.* \([0-9]\+\) .* \([0-9]\+\) .*/\1 \2/p')
 
 	    # check for/create/annotate 100% and 0%
 	    local benchmark_100_file="${samples_directory_path}/static.grift"
