@@ -43,7 +43,7 @@ run-release-fast:
 		--ulimit stack=-1 \
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME) "time make release-fast"
 
-run-release-fast:
+run-release:
 	cp -r ./* $(HOST_EXPERIMENT_DIR)
 	docker run --userns=host \
 		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
