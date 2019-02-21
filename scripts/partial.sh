@@ -283,10 +283,10 @@ main()
     LOOPS="$1";         shift
     local date="$1";    shift
     CAST_PROFILER="$1"; shift
-    local MODE="$1";   shift
+    local MODE="$1";    shift
     local nbins="$1";   shift
 
-    declare -r LB_DIR="${ROOT_DIR}/partial"
+    declare -r LB_DIR="${ROOT_DIR}/partial/${MODE}"
     if [ "$date" == "fresh" ]; then
         declare -r DATE=`date +%Y_%m_%d_%H_%M_%S`
         mkdir -p "$LB_DIR/$DATE"
