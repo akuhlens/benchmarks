@@ -21,11 +21,12 @@ build-unset-arg:
 
 # --userns=host is needed because of https://docs.docker.com/engine/security/userns-remap/
 # beware that the files created on the host volume will be owned by root
+# --ulimit stack=-1 = ulimit -s unlimited; this is needed for fft
 run:
 	cp -r ./* $(HOST_EXPERIMENT_DIR)
 	docker run --userns=host \
 		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
-		--ulimit stack=unlimited \
+		--ulimit stack=-1 \
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME)
 
 setup_dir:
@@ -35,13 +36,10 @@ setup_dir:
 typed_racket_benchmarks/.git:
 	git submodule update --init typed_racket_benchmarks
 
-# needed for the fft benchmarks
-# ulimit -s unlimited
-
 attach:
 	docker run --rm -it --userns=host \
 		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
-		--ulimit stack=unlimited \
+		--ulimit stack=-1 \
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME) /bin/bash
 
 debug: build typed_racket_benchmarks/.git setup_dir attach
