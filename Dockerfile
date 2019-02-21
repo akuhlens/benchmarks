@@ -60,7 +60,7 @@ RUN git clone https://github.com/Gradual-Typing/Dynamizer.git \
 # installing utilities for the experiments
 # sice machines run kernel 3.10 which causes problems with Qt5
 # see https://bbs.archlinux.org/viewtopic.php?pid=1755257#p1755257
-RUN pacman --quiet --noconfirm -S cairo \
+RUN pacman --quiet --noconfirm -S cairo fribidi \
     && wget http://ftp.gnome.org/pub/GNOME/sources/pango/1.42/pango-1.42.4.tar.xz \
     && tar xf pango-1.42.4.tar.xz && cd pango-1.42.4 \
     && ./configure && make -j 8 && make install
