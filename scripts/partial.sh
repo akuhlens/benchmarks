@@ -145,8 +145,7 @@ gen_output()
 # $5  - second config index
 # $6  - benchmark filename without extension
 # $7  - space-separated benchmark arguments
-# $8  - nbins
-# $9 - aux name
+# $8 - aux name
 run_benchmark()
 {
     local baseline_system="$1"; shift
@@ -156,7 +155,6 @@ run_benchmark()
     local config2_index="$1";   shift
     local benchmark_name="$1";  shift
     local input_filename="$1";  shift
-    local nbins="$1";           shift
     local aux_name="$1";        shift
 
     local samples_directory_path="${TMP_DIR}/partial/${benchmark_name}"
@@ -200,9 +198,17 @@ run_benchmark()
         if [ "$MODE" = "fine" ]; then
 	    rm -f "${samples_directory_path}.grift"
             cp "$static_source_path" "${samples_directory_path}.grift"
-            dynamizer_out=$(dynamizer "${samples_directory_path}.grift" --fine\
-				      --bins "$nbins" | \
+	    if [[ "$SAMPLES_N" -eq "0" ]]; then
+		dynamizer_out=$(dynamizer "${samples_directory_path}.grift" \
+					  --fine --bins "$BINS_N" | \
                                 sed -n 's/.* \([0-9]\+\) .* \([0-9]\+\) .*/\1 \2/p')
+	    else
+		dynamizer_out=$(dynamizer "${samples_directory_path}.grift" \
+					  --fine\
+					  --configurations-count "$SAMPLES_N"\
+					  --bins "$BINS_N" | \
+                                sed -n 's/.* \([0-9]\+\) .* \([0-9]\+\) .*/\1 \2/p')
+	    fi
 
 	    # check for/create/annotate 100% and 0%
 	    local benchmark_100_file="${samples_directory_path}/static.grift"
@@ -219,7 +225,7 @@ run_benchmark()
             cp -a "$static_source_path/." "${TMP_DIR}/partial/"
             dynamizer_out=$(dynamizer "${TMP_DIR}/partial/main.grift"\
                                       --coarse | \
-                                sed -n 's/.* \([0-9]\+\) .* \([0-9]\+\) .*/\1 \2/p')
+                            sed -n 's/.* \([0-9]\+\) .* \([0-9]\+\) .*/\1 \2/p')
 	    # the source is created by the dynamizer
 	    mv "${TMP_DIR}/partial/main" "${samples_directory_path}"
 	    # deleting the source files so it does not mingle with sources of
@@ -245,7 +251,6 @@ run_benchmark()
 # $3 - dynamically typed system
 # $4 - first config index
 # $5 - second config index
-# $6 - nbins
 run_experiment()
 {
     local baseline_system="$1"; shift
@@ -253,13 +258,12 @@ run_experiment()
     local dynamic_system="$1";  shift
     local config1_index="$1";   shift
     local config2_index="$1";   shift
-    local nbins="$1";           shift
 
     local g=()
 
     for ((i=0;i<${#BENCHMARKS[@]};++i)); do
         run_benchmark $baseline_system $static_system $dynamic_system $config1_index $config2_index\
-                      "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_PARTIAL[i]}" "$nbins" ""
+                      "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_PARTIAL[i]}" ""
         g+=($RETURN)
     done
 
@@ -273,18 +277,19 @@ run_experiment()
 
 main()
 {
-    USAGE="Usage: $0 root loops [fresh|date] cast_profiler? [fine|coarse] nbins n_1,n_2 ... n_n"
+    USAGE="Usage: $0 root loops [fresh|date] cast_profiler? [fine|coarse] BINS_N n_1,n_2 ... n_n"
     if [ "$#" == "0" ]; then
         echo "$USAGE"
         exit 1
     fi
 
-    ROOT_DIR="$1";      shift
-    LOOPS="$1";         shift
-    local date="$1";    shift
-    CAST_PROFILER="$1"; shift
-    local MODE="$1";    shift
-    local nbins="$1";   shift
+    ROOT_DIR="$1";        shift
+    LOOPS="$1";           shift
+    local date="$1";      shift
+    CAST_PROFILER="$1";   shift
+    local MODE="$1";      shift
+    local BINS_N="$1";    shift
+    local SAMPLES_N="$1"; shift
 
     declare -r LB_DIR="${ROOT_DIR}/partial/${MODE}"
     if [ "$date" == "fresh" ]; then
@@ -368,7 +373,7 @@ main()
         chezscheme_ver=$(chez-scheme --version 2>&1)
         printf "ChezScheme ver.\t:%s\n" "$chezscheme_ver" >> "$PARAMS_LOG"
         printf "loops:\t\t:%s\n" "$LOOPS" >> "$PARAMS_LOG"
-        printf "nbins\t:%s\n" "$nbins" >> "$PARAMS_LOG"
+        printf "BINS_N\t:%s\n" "$BINS_N" >> "$PARAMS_LOG"
     fi
 
     local i j
@@ -378,7 +383,7 @@ main()
             for j in `seq ${i} ${config}`; do
                 if [ ! $i -eq $j ]; then
                     run_experiment $baseline_system $static_system \
-                                   $dynamic_system $i $j $nbins
+                                   $dynamic_system $i $j
                 fi
             done
         done
@@ -386,8 +391,7 @@ main()
         while (( "$#" )); do
             i=$1; shift
             j=$1; shift
-            run_experiment $baseline_system $static_system $dynamic_system $i\
-                           $j $nbins
+            run_experiment $baseline_system $static_system $dynamic_system $i $j
         done
     fi
 

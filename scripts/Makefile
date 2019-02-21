@@ -1,5 +1,6 @@
+BIN_SAMPLES ?= 0
 NUM_BINS ?= 30
-TIMING_SAMPLES ?= 20
+TIMING_SAMPLES ?= 10
 ROOT_DIR ?=/app/experiments
 TEST_DIR=test
 BENCHMARK_DIR ?=fresh
@@ -22,12 +23,13 @@ external:
 
 fine:
 	./partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true fine \
-		$(NUM_BINS) $(CONFIGS)
+		$(NUM_BINS) $(BIN_SAMPLES) $(CONFIGS)
 
 coarse:
 	./coarse_racket.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR)
+	# BIN_SAMPLES and NUM_BINS are unused here
 	./partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
-		$(NUM_BINS) $(CONFIGS)
+		$(NUM_BINS) $(BIN_SAMPLES) $(CONFIGS)
 
 test:
 	TIMING_SAMPLES=1 BIN_SAMPLES=1 NUM_BINS=20 BENCHMARK_DIR=$(TEST_DIR) ROOT_DIR=".." \
