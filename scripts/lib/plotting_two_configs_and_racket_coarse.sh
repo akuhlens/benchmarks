@@ -43,8 +43,16 @@ function plot_two_configs_and_racket_coarse()
 	plot_two_configs_and_racket_coarse_benchmark "$benchmark" $c1 $c2 "$c1t" "$c2t" $dyn_config
     done
 
-    cd "$CUMULATIVE_PERFORMANCE_DIR"
-    convert -append quicksort.png sieve.png ray.png blackscholes.png n-body.png fft.png matmult.png "$legend_fig"  "${ROOT_DIR}/Fig7_LHS.png"
+    convert -append \
+	    "${CUMULATIVE_PERFORMANCE_DIR}/quicksort.png" \
+	    "${CUMULATIVE_PERFORMANCE_DIR}/sieve.png" \
+	    "${CUMULATIVE_PERFORMANCE_DIR}/ray.png" \
+	    "${CUMULATIVE_PERFORMANCE_DIR}/blackscholes.png" \
+	    "${CUMULATIVE_PERFORMANCE_DIR}/n_body.png" \
+	    "${CUMULATIVE_PERFORMANCE_DIR}/fft.png" \
+	    "${CUMULATIVE_PERFORMANCE_DIR}/matmult.png" \
+	    "$legend_fig" \
+	    "${ROOT_DIR}/Fig7_LHS.png"
 }
 
 function plot_two_configs_and_racket_coarse_benchmark()
