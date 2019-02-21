@@ -143,7 +143,7 @@ run_experiment()
     local dynamic_system="$1";  shift
 
     for ((i=0;i<${#BENCHMARKS[@]};++i)); do
-        run_benchmark $baseline_system $static_system $dynamic_system "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_LATTICE[i]}"  ""
+        run_benchmark $baseline_system $static_system $dynamic_system "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_PARTIAL[i]}"  ""
     done
 }
 

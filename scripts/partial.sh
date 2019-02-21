@@ -259,7 +259,7 @@ run_experiment()
 
     for ((i=0;i<${#BENCHMARKS[@]};++i)); do
         run_benchmark $baseline_system $static_system $dynamic_system $config1_index $config2_index\
-                      "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_LATTICE[i]}" "$nbins" ""
+                      "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_PARTIAL[i]}" "$nbins" ""
         g+=($RETURN)
     done
 
