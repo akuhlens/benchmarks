@@ -10,7 +10,7 @@ function main()
 
     declare -r LIB_DIR="${ROOT_DIR}/scripts/lib"
     declare -r LB_DIR="${ROOT_DIR}/results/grift/partial/${mode}"
-    declare -r RKT_DIR="${ROOT_DIR}/coarse_racket"
+    declare -r RKT_DIR="${ROOT_DIR}/results/typed_racket/partial/coarse"
     echo "${LB_DIR}"
     if [ -z ${BENCHMARK_DIR+x} ]; then
 	# if the variable is not set, pick the most recent experiment directory
