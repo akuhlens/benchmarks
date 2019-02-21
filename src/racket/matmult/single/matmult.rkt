@@ -45,7 +45,7 @@
           [bc size])
       (let ([a (create ar ac)]
             [b (create br bc)])
-        (display (vector-ref (mult a ar ac b br bc) (- (* ar bc) 1)))))))
+        (printf "~a\n" (number->string (vector-ref (mult a ar ac b br bc) (- (* ar bc) 1))))))))
 
 (time (main))
 

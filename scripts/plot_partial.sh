@@ -1,5 +1,7 @@
 #!/bin/sh
 
+umask 000
+
 function main()
 {
     ROOT_DIR="$1";   shift
