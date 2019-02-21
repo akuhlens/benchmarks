@@ -64,7 +64,7 @@ RUN pacman --quiet --noconfirm -S imagemagick
 # sice machines run kernel 3.10 which causes problems with Qt5
 # see https://bbs.archlinux.org/viewtopic.php?pid=1755257#p1755257
 RUN pacman --quiet --noconfirm -S cairo fribidi python libcerf harfbuzz libthai \
-    	   libxft gtk-doc gobject-introspection help2man meson libgd \
+    	   libxft gtk-doc gobject-introspection help2man meson gd \
 	   cantarell-fonts ttf-dejavu \
     && wget http://ftp.gnome.org/pub/GNOME/sources/pango/1.42/pango-1.42.4.tar.xz \
     && tar xf pango-1.42.4.tar.xz && cd pango-1.42.4 \
