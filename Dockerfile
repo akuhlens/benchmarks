@@ -66,7 +66,7 @@ RUN pacman --quiet --noconfirm -S imagemagick
 RUN pacman --quiet --noconfirm -S cairo fribidi python libcerf harfbuzz libthai \
     	   libxft gtk-doc gobject-introspection help2man meson gd pango \
 	   cantarell-fonts ttf-dejavu \
-Run wget http://downloads.sourceforge.net/sourceforge/gnuplot/gnuplot-5.2.0.tar.gz \
+    && wget http://downloads.sourceforge.net/sourceforge/gnuplot/gnuplot-5.2.0.tar.gz \
     && tar -zxvf gnuplot-5.2.0.tar.gz && cd gnuplot-5.2.0 \
     && ldconfig \
     && ./configure --disable-wxwidgets --with-qt=no --with-x --with-readline=gnu \
