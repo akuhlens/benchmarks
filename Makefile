@@ -29,6 +29,27 @@ run:
 		--ulimit stack=-1 \
 		--name=$(CONTAINER_NAME) $(IMAGE_NAME)
 
+run-test:
+	cp -r ./* $(HOST_EXPERIMENT_DIR)
+	docker run --userns=host \
+		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
+		--ulimit stack=-1 \
+		--name=$(CONTAINER_NAME) $(IMAGE_NAME) "time make test"
+
+run-release-fast:
+	cp -r ./* $(HOST_EXPERIMENT_DIR)
+	docker run --userns=host \
+		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
+		--ulimit stack=-1 \
+		--name=$(CONTAINER_NAME) $(IMAGE_NAME) "time make release-fast"
+
+run-release-fast:
+	cp -r ./* $(HOST_EXPERIMENT_DIR)
+	docker run --userns=host \
+		-v $(HOST_EXPERIMENT_DIR):$(CONTAINER_EXPERIMENT_DIR) \
+		--ulimit stack=-1 \
+		--name=$(CONTAINER_NAME) $(IMAGE_NAME) "time make release"
+
 setup_dir:
 	@ mkdir -p $(HOST_EXPERIMENT_DIR)
 	cp -r ./* $(HOST_EXPERIMENT_DIR)
@@ -47,6 +68,12 @@ debug: build typed_racket_benchmarks/.git setup_dir attach
 debug_bench: build-unset-arg typed_racket_benchmarks/.git setup_dir attach
 
 debug_nocache: build-no-cache typed_racket_benchmarks/.git setup_dir attach
+
+test: typed_racket_benchmarks/.git setup_dir run-test
+
+release-fast: typed_racket_benchmarks/.git setup_dir run-release-fast
+
+release: typed_racket_benchmarks/.git setup_dir run-release
 
 docker-clean:
 	@echo "Remove all non running containers"

@@ -1,3 +1,4 @@
+INPUT_TYPE ?=release
 BIN_SAMPLES ?= -1
 NUM_BINS ?= 30
 TIMING_SAMPLES ?= 10
@@ -10,7 +11,7 @@ DYNAMIC_GRIFT_CONFIG ?=17
 
 .PHONY: external fine coarse all plot clean test-clean outputs
 
-all: coarse plot_coarse fine plot_fine external
+release: coarse plot_coarse fine plot_fine external
 
 plot_coarse:
 	./plot_partial.sh $(ROOT_DIR) coarse $(DYNAMIC_GRIFT_CONFIG) $(CONFIGS)
@@ -23,16 +24,19 @@ external:
 
 fine:
 	./grift_partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true fine \
-		$(NUM_BINS) $(BIN_SAMPLES) $(CONFIGS)
+		$(NUM_BINS) $(BIN_SAMPLES) $(INPUT_TYPE) $(CONFIGS)
 
 coarse:
-	./racket_partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR)
+	./racket_partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) $(INPUT_TYPE)
 	./grift_partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
-		$(NUM_BINS) $(BIN_SAMPLES) $(CONFIGS)
+		$(NUM_BINS) $(BIN_SAMPLES) $(INPUT_TYPE) $(CONFIGS)
 
 test:
-	TIMING_SAMPLES=1 BIN_SAMPLES=1 NUM_BINS=2 BENCHMARK_DIR=$(TEST_DIR) ROOT_DIR=".." \
+	INPUT_TYPE=test TIMING_SAMPLES=1 BIN_SAMPLES=1 NUM_BINS=2 \
+	BENCHMARK_DIR=$(TEST_DIR) ROOT_DIR=".." \
 		$(MAKE) all
+
+release-fast: INPUT_TYPE=test TIMING_SAMPLES=1 $(MAKE) all
 
 clean:
 	find extremes results -executable -and \( -not -type d \) -delete

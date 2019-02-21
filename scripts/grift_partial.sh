@@ -255,18 +255,21 @@ run_experiment()
 
     local g=()
 
-    if [ "$DATE" == "test" ]; then
+    if [ "$INPUT_TYPE" == "test" ]; then
 	    for ((i=0;i<${#BENCHMARKS[@]};++i)); do
 		run_benchmark $baseline_system $static_system $dynamic_system $config1_index $config2_index\
                       "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_TRIVIAL[i]}" ""
 		g+=($RETURN)
 	    done
-    else
+    elif [ "$INPUT_TYPE" == "release" ]; then
 	    for ((i=0;i<${#BENCHMARKS[@]};++i)); do
 		run_benchmark $baseline_system $static_system $dynamic_system $config1_index $config2_index\
                       "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_PARTIAL[i]}" ""
 		g+=($RETURN)
 	    done
+    else
+	echo "ERROR: INPUT_TYPE: expected test or release but got ${INPUT_TYPE}"
+	exit 1
     fi
 
     IFS=$'\n'
@@ -279,19 +282,20 @@ run_experiment()
 
 main()
 {
-    USAGE="Usage: $0 root loops [fresh|date] cast_profiler? [fine|coarse] BINS_N SAMPLES_N n_1,n_2 ... n_n"
+    USAGE="Usage: $0 root loops [fresh|date] cast_profiler? [fine|coarse] BINS_N SAMPLES_N INPUT_TYPE n_1,n_2 ... n_n"
     if [ "$#" == "0" ]; then
         echo "$USAGE"
         exit 1
     fi
 
-    ROOT_DIR="$1";        shift
-    LOOPS="$1";           shift
-    local date="$1";      shift
-    CAST_PROFILER="$1";   shift
-    local MODE="$1";      shift
-    local BINS_N="$1";    shift
-    local SAMPLES_N="$1"; shift
+    ROOT_DIR="$1";      shift
+    LOOPS="$1";         shift
+    local date="$1";    shift
+    CAST_PROFILER="$1"; shift
+    local MODE="$1";    shift
+    BINS_N="$1";        shift
+    SAMPLES_N="$1";     shift
+    INPUT_TYPE="$1";    shift
 
     declare -r LB_DIR="${ROOT_DIR}/results/grift/partial/${MODE}"
     if [ "$date" == "fresh" ]; then

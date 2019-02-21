@@ -142,27 +142,31 @@ run_experiment()
     local static_system="$1";   shift
     local dynamic_system="$1";  shift
 
-    if [ "$DATE" == "test" ]; then
+    if [ "$INPUT_TYPE" == "test" ]; then
 	for ((i=0;i<${#BENCHMARKS[@]};++i)); do
             run_benchmark $baseline_system $static_system $dynamic_system "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_TRIVIAL[i]}"  ""
 	done
-    else
+    elif [ "$INPUT_TYPE" == "release" ]; then
 	for ((i=0;i<${#BENCHMARKS[@]};++i)); do
             run_benchmark $baseline_system $static_system $dynamic_system "${BENCHMARKS[i]}" "${BENCHMARKS_ARGS_PARTIAL[i]}"  ""
 	done
+    else
+	echo "ERROR: INPUT_TYPE: expected test or release but got ${INPUT_TYPE}"
+	exit 1
     fi
 }
 
 main()
 {
-    USAGE="Usage: $0 root loops [fresh|date]"
+    USAGE="Usage: $0 root loops [fresh|date] INPUT_TYPE"
     if [ "$#" == "0" ]; then
         echo "$USAGE"
         exit 1
     fi
-    ROOT_DIR="$1";       shift
-    LOOPS="$1";          shift
-    local date="$1";     shift
+    ROOT_DIR="$1";   shift
+    LOOPS="$1";      shift
+    local date="$1"; shift
+    INPUT_TYPE="$1"; shift
 
     declare -r LB_DIR="${ROOT_DIR}/results/typed_racket/partial/coarse"
     if [ "$date" == "fresh" ]; then
