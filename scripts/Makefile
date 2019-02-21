@@ -22,12 +22,12 @@ external:
 	./extremes.sh $(TIMING_SAMPLES) $(ROOT_DIR) $(BENCHMARK_DIR) $(IDEAL_CONFIGS)
 
 fine:
-	./partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true fine \
+	./grift_partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true fine \
 		$(NUM_BINS) $(BIN_SAMPLES) $(CONFIGS)
 
 coarse:
-	./coarse_racket.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR)
-	./partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
+	./racket_partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR)
+	./grift_partial.sh $(ROOT_DIR) $(TIMING_SAMPLES) $(BENCHMARK_DIR) true coarse \
 		$(NUM_BINS) $(BIN_SAMPLES) $(CONFIGS)
 
 test:
@@ -35,12 +35,14 @@ test:
 		$(MAKE) all
 
 clean:
-	find extremes partial -executable -and \( -not -type d \) -delete
-	find extremes partial -type d -and -name "compiled" -exec rm -r {} \;
+	find extremes results -executable -and \( -not -type d \) -delete
+	find extremes results -type d -and -name "compiled" -exec rm -r {} \;
 	$(MAKE) -C src clean
 
 test-clean:
-	rm -rf $(ROOT_DIR)/extremes/$(TEST_DIR) $(ROOT_DIR)/partial/$(TEST_DIR)
+	rm -rf $(ROOT_DIR)/extremes/$(TEST_DIR) $(ROOT_DIR)/results/grift/partial/fine/$(TEST_DIR)
+	rm -rf $(ROOT_DIR)/extremes/$(TEST_DIR) $(ROOT_DIR)/results/grift/partial/coarse/$(TEST_DIR)
+	rm -rf $(ROOT_DIR)/extremes/$(TEST_DIR) $(ROOT_DIR)/results/typed_racket/partial/coarse/$(TEST_DIR)
 
 outputs:
 	$(MAKE) -C outputs
