@@ -64,13 +64,8 @@ RUN pacman --quiet --noconfirm -S imagemagick
 # sice machines run kernel 3.10 which causes problems with Qt5
 # see https://bbs.archlinux.org/viewtopic.php?pid=1755257#p1755257
 RUN pacman --quiet --noconfirm -S cairo fribidi python libcerf harfbuzz libthai \
-    	   libxft gtk-doc gobject-introspection help2man meson gd \
+    	   libxft gtk-doc gobject-introspection help2man meson gd pango \
 	   cantarell-fonts ttf-dejavu \
-    && wget http://ftp.gnome.org/pub/GNOME/sources/pango/1.42/pango-1.42.4.tar.xz \
-    && tar xf pango-1.42.4.tar.xz && cd pango-1.42.4 \
-    && ./configure && make -j 8 && make install \
-    && echo /usr/local/lib >> /etc/ld.so.conf && ldconfig
-ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 Run wget http://downloads.sourceforge.net/sourceforge/gnuplot/gnuplot-5.2.0.tar.gz \
     && tar -zxvf gnuplot-5.2.0.tar.gz && cd gnuplot-5.2.0 \
     && ldconfig \
